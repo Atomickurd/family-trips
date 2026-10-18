@@ -870,10 +870,23 @@ async function removePerson(pid){
   var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}})), f=null, p=null;
   (fam.families||[]).forEach(function(x){(x.people||[]).forEach(function(y){if(y.id===pid){f=x;p=y}})});
   if(!p)return;
-  if(!(await askConfirm("להסיר את "+p.name+"?"+(p.email?"\nהוא לא יוכל יותר להיכנס לאפליקציה.":"")+"\nהצ׳קליסט שלו נשאר.","הסרה",true)))return;
+  if(p.email===ADMIN_EMAIL){toast("אי אפשר להסיר את האדמין");return}
+  var mine=checkView().filter(function(c){return c.family===f.id&&c.section===p.name});
+  if(!(await askConfirm("להסיר את "+p.name+"?"+(p.email?"\nהוא לא יוכל יותר להיכנס לאפליקציה.":"")+"\nהצ׳קליסט שלו יימחק ("+mine.length+" פריטים).","הסרה",true)))return;
   f.people=f.people.filter(function(y){return y.id!==pid});
-  if(p.email&&p.email!==ADMIN_EMAIL)delete fam.members[p.email];
-  saveFamilies(fam,"הוסר");
+  f.sections=(f.sections||[]).filter(function(x){return x!==p.name});
+  if(p.email)delete fam.members[p.email];
+  if(!(await saveFamilies(fam,null)))return;
+  try{await Promise.all(mine.map(function(c){return S.db.collection("checklist").doc(c.id).delete()}))}catch(e){toast("חלק מהפריטים לא נמחקו. נסו שוב.");return}
+  toast("הוסר");
+}
+function migrateLegacy(){
+  var fam=S.fam; if(!fam||!fam.families||S._mig||!isAdmin())return;
+  var f=fam.families.find(function(x){return x.id==="roi-mai"}); if(!f||(f.people&&f.people.length))return;
+  S._mig=true;
+  var n=JSON.parse(JSON.stringify(fam)), g=n.families.find(function(x){return x.id==="roi-mai"});
+  g.people=[{id:"p-roi",name:"רועי",type:"adult",email:"atomickurd@gmail.com"},{id:"p-mai",name:"מאי",type:"adult",email:"mayavital1511@gmail.com"},{id:"p-yonatan",name:"יונתן",type:"child"}];
+  S.db.doc("trip/families").set(n).catch(function(){S._mig=false});
 }
 function openPersonEmail(pid){
   var sh=document.getElementById("sheet");
@@ -1131,7 +1144,7 @@ function startData(fb){
   function onErr(e){ if(e&&e.code==="invalid_argument"){S.auth="denied";clearSubs();render()} }
   unsubs.push(db.doc("trip/families").onSnapshot(function(s){
     S.fam=s.exists?s.data():null; LS.set("fam",S.fam);
-    S.family=(S.fam&&S.fam.members&&S.fam.members[S.email])||null; LS.set("family",S.family); watchFlights(); render();
+    S.family=(S.fam&&S.fam.members&&S.fam.members[S.email])||null; LS.set("family",S.family); watchFlights(); migrateLegacy(); render();
   },onErr));
   unsubs.push(db.doc("trip/plan").onSnapshot(function(s){
     S.loaded.plan=true;
