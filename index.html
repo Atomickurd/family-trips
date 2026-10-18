@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" style="color-scheme:light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F2EC">
+<title>קרקוב 30.11–4.12</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="קרקוב">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bellefair&family=Assistant:wght@300;400;600&display=swap" rel="stylesheet">
+<style id="app-css">
+:root{
+  --bg:#F6F2EC; --surface:#FFFFFF; --surface2:#EEE7DE; --ink:#2C2930; --ink2:#6F6973; --line:#E4DCD1;
+  --pine:#9B2C2C; --pine-soft:#F6E3E1; --lake:#2F4E78; --lake-soft:#E3EAF4; --larch:#B07C1E; --larch-soft:#F6ECD6;
+  --alp:#2F6B4F; --alp-soft:#E1EFE7;
+  --ok:#3E7A55; --ok-soft:#E2EFE6; --warn:#A5680F; --warn-soft:#F6ECD6; --off:#B5382C; --off-soft:#F8E2DE;
+  --serif:"Bellefair","Frank Ruhl Libre","David",serif;
+  --sans:"Assistant","Segoe UI","Arial Hebrew",Arial,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-text-size-adjust:100%}
+a{color:var(--lake)}
+button{font:inherit;color:inherit}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 110px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+header.top::after{content:"";display:block;height:3px;background:linear-gradient(to left,var(--pine) 0 40%,var(--larch) 40% 70%,var(--alp) 70% 88%,var(--lake) 88%)}
+.top-in{max-width:640px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.brand{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.1;flex:1}
+.brand small{display:block;font-family:var(--sans);font-weight:400;font-size:12.5px;color:var(--ink2);margin-top:2px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:500;background:var(--surface2);color:var(--ink2);border:0;white-space:nowrap}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.off{background:var(--off-soft);color:var(--off)} .pill.wait{background:var(--warn-soft);color:var(--warn)}
+
+/* tabs */
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs-in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
+.tab{background:none;border:0;padding:8px 1px 9px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--ink2);cursor:pointer;min-height:56px}
+.tab svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tab[aria-selected="true"]{color:var(--pine);font-weight:600}
+.tab:focus-visible,.btn:focus-visible,.chip:focus-visible,.nav-btn:focus-visible{outline:2px solid var(--larch);outline-offset:2px}
+
+/* day strip */
+.strip{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 10px;scrollbar-width:none;margin:0 -16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdr,70px));z-index:15;background:var(--bg);box-shadow:0 6px 10px -10px rgba(46,59,54,.35)}
+.strip::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:6px 10px;text-align:center;cursor:pointer;min-width:52px}
+.chip b{display:block;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1}
+.chip span{font-size:11.5px;color:var(--ink2)}
+.chip[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:#fff}
+.chip[aria-pressed="true"] span{color:#F6E3E1}
+.chip.today{border-color:var(--alp);border-width:2px}
+
+.dayhead{padding:14px 0 6px}
+.dayhead .when{font-size:14px;color:var(--larch);font-weight:600}
+.dayhead h1{font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.15;margin:2px 0 8px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;color:var(--ink2)}
+.facts span strong{color:var(--ink);font-weight:500}
+.wx{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:var(--lake-soft);padding:11px 13px}
+.wx-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px;color:var(--lake);font-weight:600}
+.wx-h small{font-weight:400;color:var(--ink2);font-size:11.5px}
+.wx-m{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-top:4px}
+.wx-t{font-family:var(--serif);font-size:30px;line-height:1.1;direction:ltr;font-variant-numeric:tabular-nums}
+.wx-t i{font-style:normal;font-size:18px;color:var(--ink2)}
+.wx-c{font-size:15px;font-weight:600}
+.wx-d{font-size:13px;color:var(--ink2);margin-top:4px}
+.wx-n{font-size:13.5px;margin-top:6px;line-height:1.4}
+.wx.clim{background:var(--surface2)}
+.wx.clim .wx-h{color:var(--ink2)}
+.wx-r{padding:8px 0 2px;border-top:1px solid rgba(63,127,150,.18)}
+.wx-r:first-of-type{border-top:0}
+.wx-p{font-size:14px;font-weight:600;color:var(--ink)}
+.wx-p small{font-weight:400;color:var(--ink2);font-size:12px}
+.wx-r .wx-t{font-size:26px}
+.wx-r.none .wx-n{color:var(--ink2);margin-top:2px}
+.wx-r.clim .wx-p{color:var(--ink2)}
+.wx-all{border-top:1px solid rgba(63,127,150,.18);padding-top:8px;margin-top:8px}
+.wx.none{background:var(--surface2);color:var(--ink2);font-size:13.5px}
+
+/* timeline */
+.tl{list-style:none;margin:14px 0 0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;top:6px;bottom:6px;right:62px;width:2px;background:var(--line)}
+.ev{display:grid;grid-template-columns:56px 1fr;gap:0 18px;padding:0 0 16px;position:relative}
+.ev .t{font-size:13px;font-weight:600;color:var(--ink2);direction:ltr;text-align:right;font-variant-numeric:tabular-nums;padding-top:2px;line-height:1.25;word-break:break-word}
+.ev::after{content:"";position:absolute;right:58px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--ink2)}
+.ev.st-confirmed::after{border-color:var(--ok);background:var(--ok)}
+.ev.st-pending::after{border-color:var(--warn)}
+.ev.now::after{border-color:var(--larch);background:var(--larch);box-shadow:0 0 0 4px var(--larch-soft)}
+.ev .c h3{margin:0;font-size:16px;font-weight:600;line-height:1.35}
+.ev .c p{margin:3px 0 0;font-size:14px;color:var(--ink2)}
+.ev.now .c h3{color:var(--larch)}
+.badge{display:inline-block;font-size:11.5px;font-weight:600;border-radius:6px;padding:1px 7px;margin-inline-start:6px;vertical-align:2px}
+.b-confirmed{background:var(--ok-soft);color:var(--ok)} .b-pending{background:var(--warn-soft);color:var(--warn)}
+.b-optional{background:var(--surface2);color:var(--ink2)} .b-backup{background:var(--lake-soft);color:var(--lake)} .b-dropped{background:var(--off-soft);color:var(--off)}
+.navs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.nav-btn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:13px;font-weight:500;border-radius:9px;padding:6px 10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.nav-btn svg{width:15px;height:15px}
+.nav-btn.waze{background:var(--lake-soft);border-color:transparent;color:var(--lake)}
+.opts{margin-top:8px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.opt{display:flex;gap:12px;padding:9px 12px;border-top:1px solid var(--line);align-items:flex-start}
+.opt:first-child{border-top:0}
+.o-t{flex:0 0 auto;font-weight:600;font-size:15px;color:var(--pine);font-variant-numeric:tabular-nums;min-width:108px}
+.o-d{flex:1;min-width:0;line-height:1.35}
+.o-d b{display:block;font-weight:600;font-size:14px}
+.o-d small{display:block;font-size:12.5px;color:var(--ink2)}
+.o-d small.o-p{color:var(--warn);font-weight:600}
+.ck{display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.ck:last-of-type{border-bottom:0}
+.ck input{width:22px;height:22px;margin:0;accent-color:var(--pine);flex:0 0 auto}
+.ck label{flex:1;cursor:pointer;font-size:15.5px}
+.ck.done label{color:var(--ink2);text-decoration:line-through;text-decoration-color:var(--ink2)}
+.ck .del{padding:8px;margin:-4px -6px -4px 0}
+.ck-g{font-size:12.5px;font-weight:600;color:var(--larch);margin:10px 0 0}
+.ck-g:first-child{margin-top:0}
+.ck-n{font-family:var(--sans);font-size:15px;color:var(--ink2);font-weight:400}
+.ck-add{display:flex;gap:8px;margin-top:10px}
+.ck-add input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.ck-add button{border:0;border-radius:10px;background:var(--pine-soft);color:var(--pine);font-weight:600;padding:0 14px;cursor:pointer}
+.badge-btn{border:0;background:none;padding:0;margin:0;cursor:pointer;display:inline-flex;align-items:center;vertical-align:2px}
+.badge-btn .badge{margin-inline-start:6px}
+.badge-btn .chev{font-size:11px;color:var(--ink2);margin-inline-start:3px}
+.st-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.st-opts button{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px;cursor:pointer;text-align:start}
+.st-opts button[aria-pressed="true"]{border:2px solid var(--pine)}
+.st-opts .badge{margin:0}
+.ev.choice .c{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.ev.choice.unset .c{border:1.5px dashed var(--larch);background:var(--larch-soft)}
+.ev.choice.lone .c{background:var(--surface2);border-style:dashed}
+.ev.choice.lone .ch-btn{background:var(--ink2)}
+.ch-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.ch-tag{font-size:12px;font-weight:600;color:var(--larch)}
+.ch-btn{border:0;border-radius:999px;background:var(--larch);color:#fff;font-weight:600;font-size:13px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.ch-others{margin-top:8px;font-size:12.5px;color:var(--ink2)}
+.ch-list{display:flex;flex-direction:column;gap:8px;margin:4px 0 10px}
+.ch-opt{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:var(--bg);text-align:start;width:100%;cursor:pointer;display:block;font:inherit;color:inherit}
+.ch-opt[aria-pressed="true"]{border:2px solid var(--pine);background:var(--pine-soft)}
+.ch-opt b{display:block;font-size:15.5px;font-weight:600}
+.ch-opt span:not(.badge){display:block;font-size:13px;color:var(--ink2);margin-top:2px}
+.ch-opt .ch-sel{font-size:12px;font-weight:600;color:var(--pine);margin-top:4px}
+.ch-row{display:flex;gap:6px;align-items:stretch}
+.ch-row .ch-opt{flex:1}
+.ch-row .del{align-self:center}
+.ch-add .field{margin-bottom:8px}
+.ch-add h3{font-size:15px;margin:14px 0 8px}
+.parks{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.pk{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--lake-soft);border-radius:12px;padding:8px 10px}
+.pk-ic{flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--lake);color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;font-size:15px}
+.pk-t{flex:1;min-width:0;line-height:1.3}
+.pk-t b{display:block;font-weight:600;font-size:14px}
+.pk-t small{display:block;font-size:12px;color:var(--ink2)}
+.pk-go{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--lake)}
+.pk-go svg{width:15px;height:15px}
+.nav-btn.walk{background:var(--larch-soft);border-color:transparent;color:var(--warn)}
+.nav-btn.gm{background:var(--pine-soft);border-color:transparent;color:var(--pine)}
+
+/* cards & sections */
+.sec-title{font-family:var(--serif);font-weight:400;font-size:28px;margin:20px 0 10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px}
+.card h3{margin:0;font-size:17px;font-weight:600}
+.card .sub{font-size:13px;color:var(--ink2);margin-top:2px}
+.card p{margin:8px 0 0;font-size:14px;color:var(--ink2)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin-top:10px;font-size:14px}
+.kv dt{color:var(--ink2)} .kv dd{margin:0}
+.card.tonight{border:2px solid var(--larch)}
+.tonight-tag{font-size:12px;font-weight:600;color:var(--larch)}
+.filters{display:flex;gap:6px;overflow-x:auto;margin:0 -16px 10px;padding:4px 16px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.fchip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:13.5px;cursor:pointer}
+.fchip[aria-pressed="true"]{background:var(--pine);color:#fff;border-color:var(--pine)}
+.contacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.contacts a{font-size:13px;text-decoration:none;border-radius:8px;padding:4px 9px;background:var(--surface2);color:var(--ink)}
+.copy{border:0;background:var(--surface2);border-radius:7px;padding:2px 8px;font-size:12px;cursor:pointer;margin-inline-start:6px}
+
+/* budget */
+.meter{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+.meter .big{font-family:var(--serif);font-weight:400;font-size:46px;line-height:1;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.meter .lbl{font-size:13.5px;color:var(--ink2);margin-top:4px}
+.bar{height:10px;border-radius:5px;background:var(--surface2);overflow:hidden;margin-top:12px;position:relative;display:flex}
+.bar i{display:block;height:100%}
+.bar .c1{background:var(--lake)} .bar .c2{background:var(--larch)} .bar .over{background:var(--off)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink2);margin-top:8px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-inline-end:5px;vertical-align:0}
+.cat{padding:12px 0;border-bottom:1px solid var(--line)}
+.cat:last-child{border-bottom:0}
+.cat .row{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.cat .name{font-weight:600;font-size:15px}
+.cat .amt{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cat .amt.over{color:var(--off);font-weight:600}
+.cat .note{font-size:12.5px;color:var(--ink2)}
+.cat .bar{height:6px;margin-top:6px}
+.mark{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink2)}
+.exp{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.exp:last-child{border-bottom:0}
+.exp .e1{flex:1;min-width:0}
+.exp .e1 b{font-weight:500;font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp .e1 span{font-size:12.5px;color:var(--ink2)}
+.exp .e2{text-align:left;font-variant-numeric:tabular-nums;white-space:nowrap}
+.exp .e2 b{display:block;font-weight:600}
+.exp .e2 span{font-size:12px;color:var(--ink2)}
+.pending-tag{font-size:11px;color:var(--warn)}
+.del{border:0;background:none;color:var(--ink2);padding:6px;cursor:pointer;border-radius:8px}
+.del svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+.bk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.bk:last-child{border-bottom:0}
+.bk input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--ok);flex:0 0 auto}
+.bk label{flex:1;cursor:pointer}
+.bk .n{font-weight:500}
+.bk .m{font-size:12.5px;color:var(--ink2)}
+.bk.paid .n{color:var(--ink2)}
+.fab{position:fixed;left:16px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:25;border:0;border-radius:999px;background:var(--larch);color:#fff;font-weight:600;font-size:15px;padding:13px 18px;display:flex;gap:8px;align-items:center;box-shadow:0 6px 18px -6px rgba(0,0,0,.35);cursor:pointer}
+.fab svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2}
+@media (min-width:672px){.fab{left:calc(50% - 320px + 16px)}}
+
+/* info */
+details.acc{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;overflow:hidden}
+details.acc summary{list-style:none;padding:14px;font-weight:600;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::after{content:"";width:9px;height:9px;border-left:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(-45deg);transition:transform .2s}
+details.acc[open] summary::after{transform:rotate(135deg)}
+.items{padding:0 14px 8px}
+.item{padding:9px 0;border-top:1px solid var(--line);font-size:14.5px}
+.item .l{font-size:12.5px;color:var(--ink2)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;font-weight:600;font-size:15px;cursor:pointer;width:100%;text-align:center;margin-top:8px}
+.btn.primary{background:var(--pine);border-color:var(--pine);color:#fff}
+.btn.danger{color:var(--off)}
+.btn[disabled]{opacity:.55;cursor:default}
+.muted{font-size:13px;color:var(--ink2)}
+.empty{padding:40px 10px;text-align:center}
+.empty h2{font-family:var(--serif);font-weight:400;font-size:28px;margin:0 0 6px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,20,25,.45);z-index:40;display:none}
+.scrim.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-width:640px;margin:0 auto;transform:translateY(105%);transition:transform .22s ease;max-height:92vh;overflow:auto}
+.sheet.open{transform:none}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+.sheet h2{font-family:var(--serif);font-weight:400;font-size:28px;margin:0 0 12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--ink2);margin-bottom:4px}
+.field input,.field select{width:100%;font:inherit;font-size:17px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--ink)}
+.amtrow{display:flex;gap:8px}
+.amtrow input{flex:1;direction:ltr;text-align:right;font-size:24px;font-weight:600}
+.seg{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.seg button{border:0;background:var(--bg);padding:0 16px;font-size:18px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--pine);color:#fff}
+.catgrid{display:flex;flex-wrap:wrap;gap:6px}
+.catgrid button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;font-size:14px;cursor:pointer}
+.catgrid button[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:#fff}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90vw;display:none}
+.toast.show{display:block}
+.progress{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-top:10px}
+.progress i{display:block;height:100%;background:var(--pine);transition:width .3s}
+.static-only{display:none}
+.fab[hidden]{display:none}
+bdi.n{white-space:nowrap}
+.arr{color:var(--alp);font-weight:400}
+.ev .t small{display:block;font-size:12px;font-weight:500;color:var(--ink2);opacity:.85}
+.gate{padding:48px 6px;text-align:center}
+.gate h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 8px}
+.gate p{color:var(--ink2);margin:0 auto 18px;max-width:34ch}
+.gbtn{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:12px 20px;font-weight:600;font-size:16px;cursor:pointer}
+.gbtn svg{width:20px;height:20px}
+.gate small{display:block;margin-top:18px;font-size:13px;color:var(--ink2);max-width:36ch;margin-inline:auto}
+.seg2{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px;background:var(--surface)}
+.seg2 button{flex:1;border:0;background:none;padding:10px;font-size:15px;cursor:pointer}
+.seg2 button[aria-pressed="true"]{background:var(--pine);color:#fff;font-weight:600}
+.tag-sh{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:0 6px;background:var(--lake-soft);color:var(--lake);margin-inline-start:6px}
+.tr{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.tr:last-child{border-bottom:0}
+.chk{display:flex;gap:10px;align-items:center;margin:4px 0 12px;font-size:15px}
+.chk input{width:22px;height:22px;accent-color:var(--pine)}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="brand">קרקוב בכריסמס<small id="sub">מאי, רועי ויונתן עם החברים, <bdi dir="ltr">30.11–4.12.2026</bdi></small></div>
+  <button class="pill" id="conn" type="button"><span class="dot"></span><span id="connTxt">טוען…</span></button>
+</div></header>
+<main class="wrap" id="main"></main>
+<nav class="tabs" aria-label="ניווט"><div class="tabs-in" role="tablist" id="tabs"></div></nav>
+<button class="fab" id="fab" type="button" hidden><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>הוצאה</button>
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></section>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* Firebase web config: public by design (it identifies the project, it is not a secret).
+   Access is enforced by the Firestore security rules (only the six trip emails). */
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDkLAQgaAKlxNZdk7pOQsk3thXUN2KnbCI",
+  authDomain: "krakow-trip-2026.firebaseapp.com",
+  projectId: "krakow-trip-2026",
+  appId: "1:298690782157:web:d73cb11e5cf57bf2d45a84"
+};
+</script>
+<script type="module">
+const V="10.12.2", base="https://www.gstatic.com/firebasejs/"+V+"/";
+function hand(api){ if(window.__onFB) window.__onFB(api); else window.__fbApi=api; }
+const cfg=window.FIREBASE_CONFIG||{};
+if(!cfg.apiKey||cfg.apiKey==="REPLACE_ME"){ hand({noconfig:true}); }
+else {
+  const {initializeApp}=await import(base+"firebase-app.js");
+  const A=await import(base+"firebase-auth.js");
+  const F=await import(base+"firebase-firestore.js");
+  const app=initializeApp(cfg);
+  const auth=A.getAuth(app);
+  let fs;
+  try{ fs=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})}); }
+  catch(e){ fs=F.getFirestore(app); }
+  const mapErr=e=>{const c=(e&&e.code)||"";return {code:c==="permission-denied"?"invalid_argument":c==="unavailable"?"unavailable":c==="not-found"?"not_found":(c||"error"),message:e&&e.message}};
+  const report=e=>{const m=mapErr(e); if(m.code==="invalid_argument"&&window.__onWriteDenied) window.__onWriteDenied();};
+  /* writes are committed to the local cache at once and synced by Firestore when online, so callers never wait for the network */
+  const fire=p=>{p.catch(report);return Promise.resolve();};
+  function wdoc(path){
+    const ref=F.doc(fs,path);
+    return {
+      onSnapshot(cb,err){return F.onSnapshot(ref,s=>cb({exists:s.exists(),data:()=>s.data()}),e=>err&&err(mapErr(e)));},
+      set(d){return fire(F.setDoc(ref,d));},
+      update(d){return fire(path.indexOf("trip/")===0?F.setDoc(ref,d,{merge:true}):F.updateDoc(ref,d));},
+      delete(){return fire(F.deleteDoc(ref));}
+    };
+  }
+  function wcol(path){
+    return {
+      onSnapshot(cb,err){return F.onSnapshot(F.collection(fs,path),q=>cb({docs:q.docs.map(d=>({id:d.id,data:()=>d.data()}))}),e=>err&&err(mapErr(e)));},
+      doc(id){return wdoc(path+"/"+id);}
+    };
+  }
+  const provider=new A.GoogleAuthProvider(); provider.setCustomParameters({prompt:"select_account"});
+  A.getRedirectResult(auth).catch(()=>{});
+  hand({
+    db:{doc:wdoc,collection:wcol},
+    onUser(cb){return A.onAuthStateChanged(auth,cb);},
+    async login(){
+      try{ await A.signInWithPopup(auth,provider); }
+      catch(e){
+        if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment")) return A.signInWithRedirect(auth,provider);
+        throw e;
+      }
+    },
+    logout(){return A.signOut(auth);}
+  });
+}
+</script>
+<script id="app-js">
+(function(){
+"use strict";
+var CLIMATE={days:(function(){var o={};["2026-11-30","2026-12-01","2026-12-02","2026-12-03"].forEach(function(d){o[d]={kind:"climate",place:"קרקוב",hi:2,lo:-4,cond:"קר ולח",note:"ממוצע רב־שנתי, לא תחזית. בדצמבר יורדים משקעים בכחצי מהימים, לפעמים שלג."}});return o})()};
+
+var TRIP_START="2026-11-30", TRIP_END="2026-12-04";
+var CATS=[
+  {id:"food",name:"אוכל ושתייה"},{id:"shop",name:"קניות"},{id:"kids",name:"ג׳ימבורי וילדים"},
+  {id:"attr",name:"אטרקציות"},{id:"trans",name:"מוניות והסעות"},{id:"misc",name:"שונות"}
+];
+var STATUS={confirmed:"מאושר",pending:"ממתין",optional:"אופציונלי",backup:"חלופה",dropped:"לא בתכנון"};
+var STATIC = !!window.__STATIC_DATA__;
+
+/* ---------- local storage ---------- */
+var LS={get:function(k,d){try{var v=localStorage.getItem("krk26:"+k);return v?JSON.parse(v):d}catch(e){return d}},
+        set:function(k,v){try{localStorage.setItem("krk26:"+k,JSON.stringify(v))}catch(e){}}};
+
+var S={
+  plan: STATIC? window.__STATIC_DATA__.plan : LS.get("plan",null),
+  paid: STATIC? window.__STATIC_DATA__.paid : LS.get("paid",{}),
+  expenses: STATIC? window.__STATIC_DATA__.expenses : LS.get("exp",[]),
+  settings: STATIC? window.__STATIC_DATA__.settings : LS.get("settings",{rate:0.8}),
+  rst: STATIC? (window.__STATIC_DATA__.rst||{}) : LS.get("rst",{}),
+  check: STATIC? window.__STATIC_DATA__.check : LS.get("chk",[]),
+  choices: STATIC? (window.__STATIC_DATA__.choices||{}) : LS.get("chc",{}),
+  weather: STATIC? (window.__STATIC_DATA__.weather||{}) : LS.get("wx",{}),
+  queue: STATIC? [] : LS.get("queue",[]),
+  tab: LS.get("tab","day"), day:null, area:"הכל",
+  db:null, user:null, canWrite:null, conn:"loading", loaded:{plan:false}, auth:"loading", email:"", fam:LS.get("fam",null), family:LS.get("family",null), bview:"mine"
+};
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function wrapNums(s){return s.replace(/(?<![A-Za-z\d])\+?\d(?:(?:[\d.:,\/]|\s(?=\d))*\d)?(?:\s?[–-]\s?\d(?:[\d.:,\/]*\d)?)*(?![A-Za-z\d])/g,function(m){return '<bdi dir="ltr" class="n">'+m+'</bdi>'})}
+function tx(s){s=String(s==null?"":s);if(s.indexOf("→")<0)return wrapNums(esc(s));
+  return s.split("→").map(function(x){return '<bdi dir="rtl">'+wrapNums(esc(x.trim()))+'</bdi>'}).join('<span class="arr"> ← </span>')}
+function L(s){return '<bdi dir="ltr">'+esc(s)+'</bdi>'}
+function gm(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
+function walkUrl(w){var u="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin="+encodeURIComponent(w.from)+"&destination="+encodeURIComponent(w.to);
+  if(w.via&&w.via.length)u+="&waypoints="+encodeURIComponent(w.via.slice(0,8).join("|"));return u}
+var IC={
+ pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+ waze:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15c-1-1-1.5-3-1-5C4 5.5 8 3 12.5 3S21 6.5 21 11c0 3.5-2.5 6-6 6.5H9.5"/><circle cx="8" cy="18.5" r="1.8"/><circle cx="16.5" cy="18.5" r="1.8"/><path d="M10 10h.01M15 10h.01"/></svg>',
+ walk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="1.8"/><path d="M10 21l2-6 3 3v3M8 12l2-4 4 1 2 3 2 1M12 15l-1-5"/></svg>',
+ link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+ bus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="14" rx="2"/><path d="M5 11h14M8 17v3M16 17v3"/><circle cx="8.5" cy="14" r=".6"/><circle cx="15.5" cy="14" r=".6"/></svg>',
+ trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/></svg>'
+};
+function dirUrl(q,mode){return "https://www.google.com/maps/dir/?api=1&travelmode="+mode+"&destination="+encodeURIComponent(q)}
+function navs(q){ if(!q) return ""; return '<div class="navs"><a class="nav-btn gm" href="'+gm(q)+'" target="_blank" rel="noopener">'+IC.pin+'מפות</a><a class="nav-btn waze" href="'+dirUrl(q,"transit")+'" target="_blank" rel="noopener">'+IC.bus+'תחבורה ציבורית</a><a class="nav-btn walk" href="'+dirUrl(q,"walking")+'" target="_blank" rel="noopener">'+IC.walk+'הליכה</a></div>'}
+function parkHTML(list){
+  if(!list||!list.length)return "";
+  return '<div class="parks">'+list.map(function(p){
+    var src=p.src==="web"?"מחיפוש שלנו":"מהמסמך";
+    return '<a class="pk" href="'+gm(p.q)+'" target="_blank" rel="noopener"><span class="pk-ic" aria-hidden="true">P</span><span class="pk-t"><b>'+tx(p.name)+'</b><small>'+tx(p.note||"")+(p.note?" | ":"")+src+'</small></span><span class="pk-go">'+IC.waze+'Waze</span></a>'}).join("")+'</div>';
+}
+function optsHTML(list){
+  if(!list||!list.length)return "";
+  return '<div class="opts">'+list.map(function(o){
+    return '<div class="opt"><div class="o-t"><bdi dir="ltr">'+esc(o.dep)+' → '+esc(o.arr)+'</bdi></div><div class="o-d"><b>'+L(o.train)+'</b>'+(o.price?'<small class="o-p">'+tx(o.price)+'</small>':"")+(o.home?'<small>במלון בערך '+L(o.home)+'</small>':"")+(o.note?'<small>'+tx(o.note)+'</small>':"")+'</div></div>'}).join("")+'</div>';
+}
+function badge(st){return st&&STATUS[st]?'<span class="badge b-'+st+'">'+STATUS[st]+'</span>':""}
+function todayISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function fmtDate(iso){var p=iso.split("-");return (+p[2])+"."+(+p[1])}
+function ils(n){return '<bdi dir="ltr">'+Math.round(n).toLocaleString("en-US")+" ₪</bdi>"}
+function rng(a,b){return '<bdi dir="ltr">'+Math.round(a).toLocaleString("en-US")+"–"+Math.round(b).toLocaleString("en-US")+" ₪</bdi>"}
+function rate(){var r=+((S.settings&&S.settings.rate)||0.8);return r>0?r:0.8}
+function toILS(e){return e.currency==="PLN"? e.amount*rate() : e.amount}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove("show")},2600)}
+function telHref(v){return "tel:"+String(v).replace(/[^\d+*#]/g,"")}
+function waHref(v){return "https://wa.me/"+String(v).replace(/[^\d]/g,"")}
+
+/* ---------- families ---------- */
+function families(){return (S.fam&&S.fam.families)||[]}
+function famName(id){if(id==="all")return "כל החבורה";var f=families().find(function(x){return x.id===id});return f?f.name:(id||"")}
+function myFam(){return families().find(function(x){return x.id===S.family})||null}
+
+/* ---------- tabs ---------- */
+var TABS=[
+ {id:"day",name:"לו״ז",ic:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>'},
+ {id:"budget",name:"תקציב",ic:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>'},
+ {id:"food",name:"אוכל",ic:'<svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1.5-3 4-3 7h3v11"/></svg>'},
+ {id:"hotels",name:"מלונות",ic:'<svg viewBox="0 0 24 24"><path d="M3 19V7M3 14h18v5M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg>'},
+ {id:"check",name:"צ׳קליסט",ic:'<svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 9l1.5 1.5L12 8M8 15l1.5 1.5L12 14M14 9.5h3M14 15.5h3"/></svg>'},
+ {id:"info",name:"מידע",ic:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>'}
+];
+function renderTabs(){
+  document.getElementById("tabs").innerHTML=TABS.map(function(t){
+    return '<button class="tab" role="tab" data-tab="'+t.id+'" aria-selected="'+(S.tab===t.id)+'">'+t.ic+t.name+'</button>'}).join("");
+}
+
+/* ---------- schedule ---------- */
+function minutes(s){var m=/(\d{1,2}):(\d{2})/.exec(s||"");return m?(+m[1])*60+(+m[2]):null}
+function currentEventIndex(day){
+  if(!day||day.date!==todayISO())return -1;
+  var now=new Date(),n=now.getHours()*60+now.getMinutes(),idx=-1;
+  day.events.forEach(function(e,i){var m=minutes(e.time);if(m!==null&&m<=n)idx=i});
+  return idx;
+}
+function timeHTML(t){var m=/^(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})$/.exec(t||"");return m?esc(m[1])+'<small>עד '+esc(m[2])+'</small>':'<span dir="auto">'+esc(t)+'</span>'}
+function wxStamp(iso){
+  if(!iso)return "";var t=new Date(iso);if(isNaN(t))return "";
+  return "עודכן "+t.getDate()+"."+(t.getMonth()+1)+" "+String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0");
+}
+function wxRow(w){
+  if(!w||w.kind==="none")return '<div class="wx-r none"><div class="wx-p"><bdi>'+esc((w&&w.place)||"")+'</bdi></div><div class="wx-n">'+(w&&w.note?tx(w.note):'אין עדיין תחזית אמינה')+'</div></div>';
+  var tmp=(w.hi!=null||w.lo!=null)?'<div class="wx-t">'+(w.hi!=null?esc(w.hi)+'°':'')+(w.lo!=null?' <i>/ '+esc(w.lo)+'°</i>':'')+'</div>':'';
+  var det=[]; if(w.rain)det.push("גשם: "+esc(w.rain)); if(w.wind)det.push("רוח: "+esc(w.wind));
+  return '<div class="wx-r'+(w.kind==="climate"?' clim':'')+'"><div class="wx-p"><bdi>'+esc(w.place||"")+'</bdi>'+(w.when?' <small>'+tx(w.when)+'</small>':'')+(w.kind==="climate"?' <small>ממוצע עונתי</small>':'')+'</div>'+
+    '<div class="wx-m">'+tmp+(w.cond?'<div class="wx-c">'+tx(w.cond)+'</div>':'')+'</div>'+
+    (det.length?'<div class="wx-d">'+det.join(' · ')+'</div>':'')+(w.note?'<div class="wx-n">'+tx(w.note)+'</div>':'')+'</div>';
+}
+function weatherHTML(d){
+  var W=(S.weather&&S.weather.days&&Object.keys(S.weather.days).length)?S.weather:CLIMATE; var wd=W.days||{}, w=wd[d.date], stamp=wxStamp(W.updated);
+  var list=w&&w.places&&w.places.length?w.places:(w?[w]:[]);
+  if(!list.length)return '';
+  return '<div class="wx"><div class="wx-h"><span>מזג אוויר'+(list.length>1?' · '+list.length+' יעדים':'')+'</span><small>'+esc(stamp)+'</small></div>'+
+    list.map(wxRow).join("")+(w.note&&w.places?'<div class="wx-n wx-all">'+tx(w.note)+'</div>':'')+'</div>';
+}
+/* ---------- choice points ---------- */
+var ALT_RE=/^(חלופה|plan\s*[ab])\b/i, SLOT_RE=/חלופה למצוא|ערב(?:ית)?\s+פתוח|לבחירה|לא נקבע/;
+function tnorm(t){return String(t||"").replace(/\s+/g,"").replace(/[–—]/g,"-")}
+function chKey(d,e){return d.date+"|"+tnorm(e.time)}
+function optId(e){return "p:"+rkey(e.title)}
+function chState(){var c=S.choices||{},sel=Object.assign({},c.sel||{}),ext={};Object.keys(c.extra||{}).forEach(function(k){ext[k]=(c.extra[k]||[]).slice()});
+  S.queue.forEach(function(op){
+    if(op.t==="chc")sel[op.id]=op.v;
+    if(op.t==="chx_add"){ext[op.id]=(ext[op.id]||[]).concat([Object.assign({_pending:true},op.data)])}
+    if(op.t==="chx_del"){ext[op.id]=(ext[op.id]||[]).filter(function(o){return o.id!==op.oid});if(sel[op.id]===op.oid)sel[op.id]=null}
+  });return {sel:sel,ext:ext}}
+function isSlot(e){return SLOT_RE.test(e.title)||(/^ארוחת ערב$/.test(String(e.title).trim())&&(e.status==="backup"||e.status==="dropped"))}
+function hasTime(t){return /\d{1,2}:\d{2}/.test(String(t||""))}
+function dayItems(d){
+  var ev=d.events||[], out=[], i=0, cs=chState(), loose=[];
+  function mkGroup(key,opts,slot,time,idxs,defId){
+    var pick=cs.sel[key], chosen=opts.find(function(o){return o.id===pick})||((pick===undefined||pick===null)&&defId?opts.find(function(o){return o.id===defId}):null)||null;
+    return {key:key,opts:opts,chosen:chosen,picked:!!(pick&&chosen&&chosen.id===pick),slot:slot,time:time,idxs:idxs};
+  }
+  function addExtras(key,opts,time){(cs.ext[key]||[]).forEach(function(o){opts.push({id:o.id,e:{time:time,title:o.title,desc:o.desc,q:o.q},idx:-1,extra:true,pending:o._pending})})}
+  while(i<ev.length){
+    if(ev[i].status==="dropped"&&!hasTime(ev[i].time)&&!isSlot(ev[i])){loose.push({e:ev[i],idx:i,pos:out.length});i++;continue}
+    var j=i; while(j+1<ev.length&&ev[i].time&&tnorm(ev[j+1].time)===tnorm(ev[i].time))j++;
+    var cl=ev.slice(i,j+1).map(function(e,k){return {e:e,idx:i+k}});
+    var live=cl.filter(function(x){return x.e.status!=="dropped"&&!isSlot(x.e)});
+    var drop=cl.filter(function(x){return x.e.status==="dropped"&&!isSlot(x.e)});
+    var slot=cl.find(function(x){return isSlot(x.e)});
+    var alt=live.length>=2&&live.some(function(x){return ALT_RE.test(x.e.title)||x.e.status==="backup"});
+    var base=(slot||cl[0]).e, key=chKey(d,base), hasExtra=(cs.ext[key]||[]).length>0;
+    if(alt||slot||drop.length||hasExtra){
+      var liveOpts=alt?live:(live.length===1&&!slot?live:[]);
+      var opts=liveOpts.concat(drop).map(function(x){return {id:optId(x.e),e:x.e,idx:x.idx,plan:true}});
+      if(!opts.length&&!slot&&!hasExtra){cl.forEach(function(x){out.push({e:x.e,idx:x.idx})});i=j+1;continue}
+      addExtras(key,opts,base.time);
+      var used={}; opts.forEach(function(o){if(o.idx>=0)used[o.idx]=1}); if(slot)used[slot.idx]=1;
+      var defO=liveOpts.length?(liveOpts.find(function(x){return !ALT_RE.test(x.e.title)&&x.e.status!=="backup"})||liveOpts[0]):null;
+      out.push({group:mkGroup(key,opts,slot&&slot.e,base.time,cl.map(function(x){return x.idx}),defO?optId(defO.e):null)});
+      cl.forEach(function(x){if(!used[x.idx])out.push({e:x.e,idx:x.idx})});
+    } else cl.forEach(function(x){out.push({e:x.e,idx:x.idx})});
+    i=j+1;
+  }
+  /* dropped items without a real time join the nearest choice point of the day (following first) */
+  loose.forEach(function(x){
+    var tgt=null,k;
+    for(k=x.pos;k<out.length;k++)if(out[k].group){tgt=out[k].group;break}
+    if(!tgt)for(k=Math.min(x.pos,out.length)-1;k>=0;k--)if(out[k].group){tgt=out[k].group;break}
+    var o={id:optId(x.e),e:x.e,idx:x.idx,plan:true};
+    if(tgt){tgt.opts.push(o);tgt.idxs.push(x.idx);var pk=cs.sel[tgt.key];if(pk===o.id){tgt.chosen=o;tgt.picked=true}}
+    else{var key="x|"+d.date+"|"+rkey(x.e.title),opts=[o];addExtras(key,opts,x.e.time);
+      out.splice(Math.min(x.pos,out.length),0,{group:mkGroup(key,opts,null,x.e.time,[x.idx],null)})}
+  });
+  return out;
+}
+function evBody(d,e,est){
+  var link=e.url?'<a class="nav-btn" href="'+esc(e.url)+'" target="_blank" rel="noopener">'+IC.link+esc(e.urlLabel||"קישור")+'</a>':"";
+  var nv=e.q?navs(e.q):"";
+  (e.links||[]).forEach(function(l){link+='<a class="nav-btn" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+IC.link+esc(l.label)+'</a>'});
+  if(e.walk&&e.walk.from&&e.walk.to) link='<a class="nav-btn walk" href="'+walkUrl(e.walk)+'" target="_blank" rel="noopener">'+IC.walk+esc(e.walk.label||"מסלול הליכה")+'</a>'+link;
+  if(link) nv = nv? nv.replace('</div>',link+'</div>') : '<div class="navs">'+link+'</div>';
+  return '<h3>'+tx(e.title)+badge(est)+'</h3>'+(e.desc?'<p>'+tx(e.desc)+'</p>':"")+optsHTML(e.options)+nv+parkHTML(e.park);
+}
+function groupHTML(d,g,isNow,isStatic){
+  var n=g.opts.length, ch=g.chosen;
+  var head='<div class="ch-h"><span class="ch-tag">'+(n?(ch?(g.picked?"נבחר מתוך "+n+" אפשרויות":"ברירת מחדל מתוך "+n+" אפשרויות"):(lone?"לא בלו״ז כרגע":n+" אפשרויות, עוד לא נבחר")):"נקודת בחירה")+'</span>'+
+    (isStatic?"":'<button class="ch-btn" type="button" data-chg="'+esc(g.key)+'">'+(ch?"החלפה":(lone?"להחזיר ללו״ז":(n?"לבחירה":"הוספת אפשרות")))+'</button>')+'</div>';
+  var cst=ch?evStatus(d,ch.e):""; if(cst==="dropped")cst="";
+  var lone=!ch&&!g.slot&&g.opts.length===1;
+  var body=ch?evBody(d,ch.e,cst):lone?evBody(d,g.opts[0].e,"dropped"):'<h3>'+tx(g.slot?g.slot.title:"מה עושים?")+'</h3>'+(g.slot&&g.slot.desc?'<p>'+tx(g.slot.desc)+'</p>':"");
+  var others=lone?[]:g.opts.filter(function(o){return o!==ch}).map(function(o){return o.e.title});
+  return '<li class="ev choice'+(ch?"":(lone?" lone":" unset"))+(isNow?" now":"")+'"><div class="t">'+timeHTML(g.time)+'</div><div class="c">'+head+body+
+    (others.length?'<div class="ch-others">אפשרויות נוספות: '+others.map(tx).join(" · ")+'</div>':"")+'</div></li>';
+}
+function findGroup(key){var days=(S.plan&&S.plan.days)||[];for(var i=0;i<days.length;i++){var its=dayItems(days[i]);for(var j=0;j<its.length;j++)if(its[j].group&&its[j].group.key===key)return {d:days[i],g:its[j].group}}return null}
+function openChoice(key){
+  var f=findGroup(key); if(!f)return; var g=f.g,d=f.d;
+  var sh=document.getElementById("sheet"), cur=g.chosen&&g.chosen.id;
+  var list=g.opts.map(function(o){
+    var btn='<button type="button" class="ch-opt" data-pick="'+esc(o.id)+'" aria-pressed="'+(cur===o.id)+'"><b>'+tx(o.e.title)+badge(o.plan?o.e.status:"")+'</b>'+
+      (o.e.desc?'<span>'+tx(String(o.e.desc).slice(0,180))+(String(o.e.desc).length>180?"…":"")+'</span>':"")+
+      (o.extra?'<span>הוספתם בעצמכם'+(o.pending?" · ממתין לסנכרון":"")+'</span>':"")+(cur===o.id?'<div class="ch-sel">✓ בלו״ז</div>':"")+'</button>';
+    return o.extra?'<div class="ch-row">'+btn+'<button class="del" type="button" data-chdel="'+esc(o.id)+'" aria-label="מחיקת אפשרות">'+IC.trash+'</button></div>':btn;
+  }).join("");
+  sh.innerHTML='<h2 id="sheetTitle">'+(g.slot?tx(g.slot.title):"מה שמים בלו״ז?")+'</h2><p class="muted" style="margin:-6px 0 10px">'+esc(d.dow)+' '+L(fmtDate(d.date))+(g.time?' · '+L(g.time):"")+'</p>'+
+    (list?'<div class="ch-list">'+list+'</div>':'<p class="muted">עוד אין אפשרויות. הוסיפו אחת למטה.</p>')+
+    (cur&&g.picked?'<button class="btn" type="button" data-pick="__clear">ביטול הבחירה</button>':"")+
+    '<div class="ch-add"><h3>אפשרות נוספת</h3><div class="field"><input id="chT" type="text" maxlength="80" placeholder="שם, למשל: צהריים בקניון"></div>'+
+    '<div class="field"><input id="chQ" type="text" maxlength="140" placeholder="כתובת או שם מקום לניווט (לא חובה)"></div>'+
+    '<div class="field"><input id="chD" type="text" maxlength="200" placeholder="הערה (לא חובה)"></div>'+
+    '<button class="btn primary" type="button" id="chAdd">הוספה ובחירה</button></div><button class="btn" type="button" id="chClose">סגירה</button>';
+  document.getElementById("scrim").classList.add("open"); sh.classList.add("open");
+  sh.onclick=function(e){var b=e.target.closest("button"); if(!b)return;
+    if(b.id==="chClose"){closeSheet();return}
+    if(b.dataset.chdel){var oid=b.dataset.chdel;enqueue({t:"chx_del",id:key,oid:oid});openChoice(key);return}
+    if(b.dataset.pick){var v=b.dataset.pick==="__clear"?null:b.dataset.pick;
+      if(S.canWrite===false){toast("אין הרשאת עריכה");return}
+      enqueue({t:"chc",id:key,v:v});closeSheet();toast(v?"עודכן בלו״ז":"הבחירה בוטלה");return}
+    if(b.id==="chAdd"){var t=document.getElementById("chT").value.trim(); if(!t){toast("צריך שם לאפשרות");document.getElementById("chT").focus();return}
+      var o={id:"x:"+uid(),title:t,q:document.getElementById("chQ").value.trim(),desc:document.getElementById("chD").value.trim(),ts:Date.now()};
+      if(S.userId)o.by=S.userId;
+      enqueue({t:"chx_add",id:key,data:o}); enqueue({t:"chc",id:key,v:o.id}); closeSheet(); toast("נוסף ונבחר");}
+  };
+}
+function dayHTML(d,isStatic){
+  var cur=isStatic?-1:currentEventIndex(d);
+  var evs=dayItems(d).map(function(it){
+    if(it.group)return groupHTML(d,it.group,it.group.idxs.indexOf(cur)>=0,isStatic);
+    var e=it.e,i=it.idx;
+    var est=evStatus(d,e); var cls="ev"+(est?" st-"+est:"")+(i===cur?" now":"");
+    return '<li class="'+cls+'"><div class="t">'+timeHTML(e.time)+'</div><div class="c">'+evBody(d,e,est)+'</div></li>';
+  }).join("");
+  return '<div class="dayhead"><div class="when">'+esc(d.dow)+' '+L(fmtDate(d.date))+(d.region?' | <bdi>'+esc(d.region)+'</bdi>':"")+'</div><h1>'+tx(d.title)+'</h1>'+
+    '<div class="facts">'+(d.sleep?'<span>לינה: <strong><bdi>'+esc(d.sleep)+'</bdi></strong></span>':"")+(d.sunset?'<span>שקיעה: <strong>'+L(d.sunset)+'</strong></span>':"")+'</div>'+weatherHTML(d)+'</div>'+
+    '<ol class="tl">'+evs+'</ol>';
+}
+function viewDay(){
+  var days=S.plan.days||[];
+  if(!days.length) return emptyHTML();
+  if(!S.day){var t=todayISO();S.day=(days.find(function(d){return d.date===t})||days[0]).id}
+  var d=days.find(function(x){return x.id===S.day})||days[0], t=todayISO();
+  var strip='<div class="strip" role="group" aria-label="בחירת יום">'+days.map(function(x){
+    return '<button class="chip'+(x.date===t?" today":"")+'" data-day="'+x.id+'" aria-pressed="'+(x.id===d.id)+'"><b>'+(+x.date.split("-")[2])+'</b><span>'+esc(x.dow)+'</span></button>'}).join("")+'</div>';
+  return strip+dayHTML(d,false);
+}
+
+/* ---------- restaurants ---------- */
+function contactsHTML(list){
+  if(!list||!list.length)return "";
+  return '<div class="contacts">'+list.map(function(c){
+    if(c.type==="tel")return '<a href="'+telHref(c.value)+'">'+L(c.value)+'</a>';
+    if(c.type==="whatsapp")return '<a href="'+waHref(c.value)+'" target="_blank" rel="noopener">WhatsApp</a>';
+    if(c.type==="email")return '<a href="mailto:'+esc(c.value)+'">'+esc(c.value)+'</a>';
+    return '<a href="'+esc(c.value)+'" target="_blank" rel="noopener">'+(/intravel|inyourpocket/.test(c.value)?"פרופיל (לא אתר רשמי)":"אתר")+'</a>';
+  }).join("")+'</div>';
+}
+function rkey(name){return String(name||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\u0590-\u05ff]+/g,"-").replace(/^-|-$/g,"")}
+function rstMap(){var m=Object.assign({},S.rst||{});S.queue.forEach(function(op){if(op.t==="rst")m[op.id]=op.v});return m}
+function rStatus(r){var m=rstMap(),k=rkey(r.name);return (k in m&&m[k])?m[k]:r.status}
+function evStatus(d,e){
+  var rs=(S.plan&&S.plan.restaurants)||[],m=rstMap(),hay=(e.title+" "+(e.q||"")).toLowerCase();
+  for(var i=0;i<rs.length;i++){var r=rs[i],k=rkey(r.name);if(!(k in m)||!m[k])continue;
+    var nm=String(r.name).toLowerCase().split(/\s+[—–-]\s+/)[0];
+    if(nm.length>3&&hay.indexOf(nm)>=0&&(!r.date||fmtDate(d.date)===r.date))return m[k]}
+  return e.status;
+}
+function restCard(r){
+  var st=rStatus(r);
+  var when=[r.date,r.time].filter(Boolean).join(" | ");
+  return '<div class="card"><h3><bdi>'+esc(r.name)+'</bdi>'+(S._static?badge(st):'<button class="badge-btn" type="button" data-rst="'+esc(r.name)+'" aria-label="שינוי סטטוס">'+(badge(st)||'<span class="badge b-optional">ללא סטטוס</span>')+'<span class="chev" aria-hidden="true">▾</span></button>')+'</h3><div class="sub">'+[r.kind?esc(r.kind):"",when?L(when):""].filter(Boolean).join(" | ")+'</div>'+
+   (r.desc?'<p>'+tx(r.desc)+'</p>':"")+(r.address?'<p><bdi>'+esc(r.address)+'</bdi></p>':"")+contactsHTML(r.contact)+(st==="dropped"?"":navs(r.q||r.name)+parkHTML(r.park))+'</div>';
+}
+function viewFood(isStatic){
+  var rs=S.plan.restaurants||[]; if(!rs.length) return emptyHTML();
+  var areas=[]; rs.forEach(function(r){if(areas.indexOf(r.area)<0)areas.push(r.area)});
+  if(isStatic) return areas.map(function(a){return '<h2 class="sec-title">'+esc(a)+'</h2>'+rs.filter(function(r){return r.area===a}).map(restCard).join("")}).join("");
+  var f='<div class="filters" role="group" aria-label="סינון לפי אזור">'+["הכל"].concat(areas).map(function(a){return '<button class="fchip" data-area="'+esc(a)+'" aria-pressed="'+(S.area===a)+'">'+esc(a)+'</button>'}).join("")+'</div>';
+  var list=areas.filter(function(a){return S.area==="הכל"||S.area===a}).map(function(a){
+    return '<h2 class="sec-title">'+esc(a)+'</h2>'+rs.filter(function(r){return r.area===a}).map(restCard).join("")}).join("");
+  return '<div style="height:12px"></div>'+f+list;
+}
+
+/* ---------- hotels ---------- */
+function viewHotels(isStatic){
+  var hs=S.plan.hotels||[]; if(!hs.length) return emptyHTML(); var t=todayISO();
+  return '<h2 class="sec-title">מלונות</h2>'+hs.map(function(h){
+    var tonight=!isStatic&&t>=h.checkin&&t<h.checkout;
+    var phones=(h.phone||[]).map(function(p){return {type:"tel",value:p}}); if(h.email)phones.push({type:"email",value:h.email});
+    return '<div class="card'+(tonight?" tonight":"")+'">'+(tonight?'<div class="tonight-tag">הלילה כאן</div>':"")+
+     '<h3><bdi>'+esc(h.name)+'</bdi>'+badge(h.status)+'</h3><div class="sub"><bdi>'+esc(h.area)+'</bdi> | '+L(fmtDate(h.checkin)+'–'+fmtDate(h.checkout))+' | '+(h.nights===1?"לילה אחד":h.nights+" לילות")+'</div>'+
+     '<dl class="kv">'+(h.room?'<dt>חדר</dt><dd>'+tx(h.room)+'</dd>':"")+(h.ref?'<dt>הזמנה</dt><dd>'+esc(h.ref)+(isStatic?"":'<button class="copy" data-copy="'+esc(h.ref)+'">העתקה</button>')+'</dd>':"")+(h.price?'<dt>מחיר</dt><dd>'+tx(h.price)+'</dd>':"")+'<dt>כתובת</dt><dd><bdi>'+esc(h.address)+'</bdi></dd>'+(h.parking?'<dt>חניה</dt><dd>'+tx(h.parking)+'</dd>':"")+'</dl>'+
+     (h.notes?'<p>'+tx(h.notes)+'</p>':"")+contactsHTML(h.url?phones.concat([{type:"url",value:h.url}]):phones)+navs(h.name+", "+h.address)+parkHTML(h.park)+'</div>';
+  }).join("");
+}
+
+/* ---------- info ---------- */
+function itemHTML(it,isStatic){
+  var v=tx(it.value);
+  if(it.tel) v='<a href="'+telHref(it.tel)+'">'+L(it.value)+'</a>';
+  else if(it.email) v='<a href="mailto:'+esc(it.email)+'">'+L(it.value)+'</a>';
+  else if(it.wa) v='<a href="'+waHref(it.wa)+'" target="_blank" rel="noopener">'+L(it.value)+'</a>';
+  else if(it.url) v='<a href="'+esc(it.url)+'" target="_blank" rel="noopener">'+v+'</a>';
+  if(it.copy&&!isStatic) v+='<button class="copy" data-copy="'+esc(String(it.value).split(" ")[0])+'">העתקה</button>';
+  return '<div class="item"><div class="l">'+esc(it.label)+'</div><div>'+v+'</div></div>';
+}
+function viewInfo(isStatic){
+  var secs=S.plan.info||[];
+  var html='<h2 class="sec-title">מידע חשוב</h2>'+secs.map(function(s,i){
+    return '<details class="acc"'+(i===0||isStatic?" open":"")+'><summary>'+esc(s.title)+'</summary><div class="items">'+s.items.map(function(it){return itemHTML(it,isStatic)}).join("")+'</div></details>'}).join("");
+  if(isStatic) return html;
+  var when=S.plan.syncedAt?new Date(S.plan.syncedAt).toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):"";
+  html+='<h2 class="sec-title">חשבון ועדכונים</h2><div class="card"><h3>'+esc(famName(S.family)||"בלי משפחה")+'</h3><div class="sub">'+L(S.email)+'</div>'+
+   (S.family?"":'<p style="color:var(--off)">הכתובת הזו לא משויכת למשפחה. בקשו מרועי לעדכן.</p>')+
+   '<button class="btn" type="button" id="logout">יציאה מהחשבון</button></div>'+
+   importHTML(false).replace('</h3>','</h3>'+(when?'<div class="sub">עודכנה לאחרונה '+esc(when)+'</div>':''))+
+   '<div class="card"><h3>עותק אופליין</h3><p>קובץ אחד עם כל הנתונים כפי שהם עכשיו, נפתח בטלפון גם בלי אינטרנט. כדאי לשמור עותק לפני הטיסה.</p>'+
+   '<button class="btn" id="offline" type="button">שמירת עותק אופליין</button></div>';
+  return html;
+}
+
+/* ---------- budget ---------- */
+function expensesView(){
+  var server=S.expenses.slice(), ids={};
+  server.forEach(function(e){ids[e.id]=1});
+  S.queue.forEach(function(op){ if(op.t==="add"&&!ids[op.id]) server.push(Object.assign({id:op.id,_pending:true},op.data)); });
+  var dels={}; S.queue.forEach(function(op){if(op.t==="del")dels[op.id]=1});
+  return server.filter(function(e){return !dels[e.id]}).sort(function(a,b){return (b.ts||0)-(a.ts||0)});
+}
+function paidMap(){
+  var m={}; (S.plan.budget&&S.plan.budget.bookings||[]).forEach(function(b){m[b.id]=!!b.paid});
+  Object.keys(S.paid||{}).forEach(function(k){m[k]=!!S.paid[k]});
+  S.queue.forEach(function(op){if(op.t==="paid")m[op.id]=op.v});
+  return m;
+}
+function catBlock(exps){
+  var byCat={}; CATS.forEach(function(c){byCat[c.id]=0});
+  exps.forEach(function(e){byCat[e.cat]=(byCat[e.cat]||0)+toILS(e)});
+  var top=0; CATS.forEach(function(c){top=Math.max(top,byCat[c.id]||0)});
+  return CATS.map(function(c){var v=byCat[c.id]||0, pct=top?v/top*100:0;
+    return '<div class="cat"><div class="row"><span class="name">'+c.name+'</span><span class="amt">'+ils(v)+'</span></div>'+(v?'<div class="bar"><i class="c2" style="width:'+pct+'%"></i></div>':"")+'</div>'}).join("");
+}
+function expRow(e,isStatic){
+  var c=CATS.find(function(x){return x.id===e.cat})||{name:e.cat};
+  var amt=e.currency==="PLN"?L((+e.amount).toFixed(2).replace(/\.00$/,"")+" zł"):ils(e.amount);
+  var mine=e.family===S.family;
+  return '<div class="exp"><div class="e1"><b>'+esc(e.note||c.name)+(e.shared?'<span class="tag-sh">משותף</span>':"")+'</b><span>'+esc(c.name)+' | '+L(fmtDate(e.date||todayISO()))+(S.bview==="settle"?' | שילמו: '+esc(famName(e.family)):"")+(e._pending?' <span class="pending-tag">ממתין לסנכרון</span>':"")+'</span></div><div class="e2"><b>'+amt+'</b>'+(e.currency==="PLN"?'<span>'+ils(toILS(e))+'</span>':"")+'</div>'+
+    (isStatic||!mine?"":'<button class="del" data-del="'+esc(e.id)+'" aria-label="מחיקת הוצאה">'+IC.trash+'</button>')+'</div>';
+}
+function settleHTML(all,isStatic){
+  var fams=families(), sh=all.filter(function(e){return e.shared}), tot=0, paid={};
+  fams.forEach(function(f){paid[f.id]=0});
+  sh.forEach(function(e){var v=toILS(e);tot+=v;paid[e.family]=(paid[e.family]||0)+v});
+  var share=fams.length?tot/fams.length:0, bal=fams.map(function(f){return {id:f.id,b:(paid[f.id]||0)-share}});
+  var debt=bal.filter(function(x){return x.b<-0.5}).map(function(x){return {id:x.id,b:-x.b}}), cred=bal.filter(function(x){return x.b>0.5}).map(function(x){return {id:x.id,b:x.b}}), moves=[];
+  debt.forEach(function(d){cred.forEach(function(c){var m=Math.min(d.b,c.b);if(m>0.5){moves.push({from:d.id,to:c.id,v:m});d.b-=m;c.b-=m}})});
+  return '<div class="meter"><div class="lbl">הוצאות משותפות לכל החבורה</div><div class="big">'+ils(tot)+'</div><p class="muted" style="margin:8px 0 0">חלק כל משפחה: '+ils(share)+'</p></div>'+
+   '<h2 class="sec-title">מי מעביר למי</h2><div class="card">'+(moves.length?moves.map(function(m){return '<div class="tr"><span>'+esc(famName(m.from))+' מעבירים ל'+esc(famName(m.to))+'</span><b>'+ils(m.v)+'</b></div>'}).join(""):'<p class="muted" style="margin:0">הכול מאוזן כרגע.</p>')+'</div>'+
+   '<h2 class="sec-title">כמה כל משפחה שילמה</h2><div class="card">'+fams.map(function(f){return '<div class="tr"><span>'+esc(f.name)+'</span><b>'+ils(paid[f.id]||0)+'</b></div>'}).join("")+'</div>'+
+   '<h2 class="sec-title">ההוצאות המשותפות</h2><div class="card">'+(sh.length?sh.map(function(e){return expRow(e,isStatic)}).join(""):'<p class="muted" style="margin:0">עוד אין. כשרושמים הוצאה, מסמנים ״משותף לכל החבורה״.</p>')+'</div>';
+}
+function viewBudget(isStatic){
+  var B=S.plan.budget||{bookings:[]}, all=expensesView();
+  var seg=isStatic?"":'<div class="seg2" role="group" aria-label="תצוגה"><button type="button" data-bview="mine" aria-pressed="'+(S.bview!=="settle")+'">המשפחה שלנו</button><button type="button" data-bview="settle" aria-pressed="'+(S.bview==="settle")+'">התחשבנות</button></div>';
+  if(S.bview==="settle"&&!isStatic)return seg+settleHTML(all,isStatic);
+  var exps=all.filter(function(e){return e.family===S.family}), spent=0;
+  exps.forEach(function(e){spent+=toILS(e)});
+  var capKey="cap_"+S.family, cap=(S.settings&&+S.settings[capKey])||0, left=cap-spent;
+  var meter=cap?('<div class="meter"><div class="lbl">'+(left>=0?"נשאר עד תקרת "+ils(cap):"חריגה מתקרת "+ils(cap))+'</div><div class="big" style="color:'+(left<0?"var(--off)":"var(--ink)")+'">'+ils(Math.abs(left))+'</div>'+
+      '<div class="bar"><i class="'+(left<0?"over":"c2")+'" style="width:'+Math.min(100,spent/cap*100)+'%"></i></div>'+
+      '<div class="legend"><span><i style="background:var(--larch)"></i>שילמנו בטיול '+ils(spent)+'</span></div></div>')
+    :('<div class="meter"><div class="lbl">שילמנו בטיול עד עכשיו</div><div class="big">'+ils(spent)+'</div><p class="muted" style="margin:10px 0 0">כולל הוצאות משותפות ששילמנו. החלוקה ביניהן בלשונית ״התחשבנות״.</p></div>');
+  var pm=paidMap();
+  var bks=(B.bookings||[]).map(function(b){
+    var k=S.family+":"+b.id, p=!!pm[k];
+    return '<div class="bk'+(p?" paid":"")+'"><input type="checkbox" id="bk-'+esc(b.id)+'" data-paid="'+esc(k)+'"'+(p?" checked":"")+(isStatic?" disabled":"")+'><label for="bk-'+esc(b.id)+'"><div class="n">'+tx(b.name)+'</div>'+((b.amount||b.ref||b.note)?'<div class="m">'+[b.amount?tx(b.amount):"",b.ref?L(b.ref):"",b.note?tx(b.note):""].filter(Boolean).join(" | ")+'</div>':"")+'</label></div>'}).join("");
+  var list=exps.length?exps.map(function(e){return expRow(e,isStatic)}).join(""):'<p class="muted">עוד אין הוצאות. לחצו ״הוצאה״ כדי לרשום את הראשונה.</p>';
+  return seg+meter+
+   '<h2 class="sec-title">לפי קטגוריה</h2><div class="card">'+catBlock(exps)+'</div>'+
+   '<h2 class="sec-title">ההוצאות שלנו</h2><div class="card">'+list+'</div>'+
+   '<h2 class="sec-title">הזמנות ותשלומים</h2><div class="card">'+bks+'</div>'+
+   (isStatic?"":'<div class="card"><div class="field"><label for="cap">תקרת תקציב למשפחה (₪, ריק = בלי תקרה)</label><input id="cap" type="number" inputmode="numeric" step="500" value="'+(cap||"")+'" placeholder="לא נקבעה"></div><div class="field" style="margin:0"><label for="rate">שער זלוטי לחישוב (₪ ל־1 zł)</label><input id="rate" type="number" inputmode="decimal" step="0.01" value="'+rate()+'"></div></div>');
+}
+
+function ckSecs(){var f=myFam();return ((f&&f.sections)||[famName(S.family)]).concat(["כל החבורה"])}
+function checkView(){
+  var list=S.check.slice(), ids={}; list.forEach(function(c){ids[c.id]=1});
+  S.queue.forEach(function(op){if(op.t==="ck_add"&&!ids[op.id])list.push(Object.assign({id:op.id,_pending:true},op.data))});
+  var dels={},sets={}; S.queue.forEach(function(op){if(op.t==="ck_del")dels[op.id]=1;if(op.t==="ck_set")sets[op.id]=op.v});
+  return list.filter(function(c){return !dels[c.id]}).map(function(c){return sets[c.id]?Object.assign({},c,sets[c.id]):c})
+    .sort(function(a,b){return (a.order||0)-(b.order||0)||(a.ts||0)-(b.ts||0)});
+}
+function viewCheck(isStatic){
+  var items=checkView().filter(function(c){return c.family===S.family||c.family==="all"}), done=items.filter(function(c){return c.done}).length;
+  var pct=items.length?Math.round(done/items.length*100):0;
+  var head='<div class="meter"><div class="lbl">צ׳קליסט לפני הטיסה</div><div class="big">'+L(done+"/"+items.length)+'</div><div class="bar"><i class="c1" style="width:'+pct+'%;background:var(--pine)"></i></div></div>';
+  var secs=ckSecs(); items.forEach(function(c){if(secs.indexOf(c.section)<0)secs.push(c.section)});
+  return head+secs.map(function(sec){
+    var its=items.filter(function(c){return c.section===sec}), d=its.filter(function(c){return c.done}).length;
+    var groups=[]; its.forEach(function(c){var g=c.group||"";if(groups.indexOf(g)<0)groups.push(g)});
+    var body=groups.map(function(g){
+      return (g?'<div class="ck-g">'+esc(g)+'</div>':"")+its.filter(function(c){return (c.group||"")===g}).map(function(c){
+        return '<div class="ck'+(c.done?" done":"")+'"><input type="checkbox" id="ck-'+esc(c.id)+'" data-ck="'+esc(c.id)+'"'+(c.done?" checked":"")+(isStatic?" disabled":"")+'><label for="ck-'+esc(c.id)+'">'+tx(c.text)+(c._pending?' <span class="pending-tag">ממתין לסנכרון</span>':"")+'</label>'+
+          (isStatic?"":'<button class="del" data-ckdel="'+esc(c.id)+'" aria-label="מחיקה">'+IC.trash+'</button>')+'</div>'}).join("")}).join("");
+    var add=isStatic?"":'<div class="ck-add"><input type="text" placeholder="להוסיף פריט…" data-cksec-input="'+esc(sec)+'" aria-label="פריט חדש ל'+esc(sec)+'"><button type="button" data-cksec="'+esc(sec)+'">הוספה</button></div>';
+    return '<h2 class="sec-title">'+esc(sec)+' <span class="ck-n">'+L(d+"/"+its.length)+'</span></h2><div class="card">'+(body||'<p class="muted" style="margin:0">אין פריטים</p>')+add+'</div>';
+  }).join("");
+}
+var GLOGO='<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 7l7.4 5.7c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.8-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.4 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
+function gateHTML(){
+  if(S.auth==="noconfig")return '<div class="gate"><h2>כמעט מוכן</h2><p>חסרות הגדרות Firebase בקובץ. האפליקציה תעבוד ברגע שיתווספו.</p></div>';
+  if(S.auth==="loading")return '<div class="gate"><h2>קרקוב בכריסמס</h2><p>מתחבר…</p></div>';
+  if(S.auth==="denied")return '<div class="gate"><h2>אין גישה לחשבון הזה</h2><p>'+L(S.email)+' לא ברשימת המשתתפים בטיול. אם זו טעות, בקשו מרועי להוסיף את הכתובת.</p><button class="gbtn" type="button" id="logout">התחברות עם חשבון אחר</button></div>';
+  return '<div class="gate"><h2>קרקוב בכריסמס</h2><p>האפליקציה של הטיול, <bdi dir="ltr">30.11–4.12.2026</bdi>. נכנסים פעם אחת עם חשבון הגוגל, והטלפון יזכור.</p>'+
+    '<button class="gbtn" type="button" id="login">'+GLOGO+'כניסה עם Google</button>'+
+    (S.loginErr?'<p style="color:var(--off);margin-top:14px">'+esc(S.loginErr)+'</p>':"")+
+    '<small>אם חלון ההתחברות לא נפתח, כנראה הקישור נפתח בתוך וואטסאפ או אינסטגרם. פתחו אותו בכרום או בספארי ונסו שוב.</small></div>';
+}
+function importHTML(first){
+  return '<div class="'+(first?"gate":"card")+'">'+(first?'<h2>טעינת התוכנית</h2><p>האפליקציה ריקה. טוענים את קובץ התוכנית שרועי קיבל מ־Claude, ומאותו רגע היא אצל כולם.</p>':'<h3>עדכון התוכנית</h3><p>כשיש שינוי בלו״ז או הזמנה חדשה, Claude מכין קובץ תוכנית מעודכן. טוענים אותו כאן והוא מתעדכן אצל כולם. הוצאות, צ׳קליסט וסימונים נשמרים.</p>')+
+    '<label class="'+(first?"gbtn":"btn")+'" style="display:inline-flex;justify-content:center" for="planFile">בחירת קובץ תוכנית</label><input id="planFile" type="file" accept=".json,application/json" hidden></div>';
+}
+async function importPlan(file){
+  var txt=await file.text(), j;
+  try{j=JSON.parse(txt)}catch(e){toast("הקובץ לא תקין");return}
+  if(!j||!j.plan||!j.plan.days){toast("זה לא קובץ תוכנית של הטיול");return}
+  var first=!S.plan;
+  if(!first&&!(await askConfirm("לעדכן את התוכנית מהקובץ?\\nהלו״ז, המסעדות, המלונות והמידע יוחלפו אצל כולם.","עדכון")))return;
+  var plan=Object.assign({},j.plan,{syncedAt:new Date().toISOString(),syncedBy:S.email});
+  await S.db.doc("trip/plan").set(plan);
+  if(j.families)await S.db.doc("trip/families").set(j.families);
+  if(first){
+    if(j.settings)await S.db.doc("trip/settings").set(j.settings);
+    (j.check||[]).forEach(function(c,i){S.db.collection("checklist").doc(c.id||("s"+i)).set({text:c.text,section:c.section,group:c.group||"",family:c.family,done:false,order:i+1,ts:Date.now()})});
+  }
+  S.plan=plan; LS.set("plan",plan); S.day=null; render(); toast(first?"התוכנית נטענה":"התוכנית עודכנה לכולם");
+}
+function emptyHTML(){
+  return '<div class="empty"><h2>עוד אין נתונים כאן</h2><p class="muted">'+(S.conn==="loading"?"טוען מהשרת…":"התוכנית תיטען בחיבור הראשון.")+'</p></div>';
+}
+
+/* ---------- main render ---------- */
+function render(){
+  renderTabs();
+  var m=document.getElementById("main"), fab=document.getElementById("fab");
+  var tabsEl=document.querySelector("nav.tabs");
+  if(S.auth!=="in"){m.innerHTML=gateHTML();fab.hidden=true;tabsEl.hidden=true;renderConn();return}
+  tabsEl.hidden=false;
+  if(!S.plan){m.innerHTML=S.loaded.plan?importHTML(true):emptyHTML();fab.hidden=true;renderConn();return}
+  var html={day:viewDay,budget:viewBudget,food:viewFood,hotels:viewHotels,check:viewCheck,info:viewInfo}[S.tab]||viewDay;
+  var y=window.scrollY; m.innerHTML=html(false); 
+  if(render._lastTab===S.tab) window.scrollTo(0,y); else window.scrollTo(0,0);
+  render._lastTab=S.tab;
+  var hd=document.querySelector("header.top"); if(hd)document.documentElement.style.setProperty("--hdr",hd.offsetHeight+"px");
+  var on=document.querySelector('.chip[aria-pressed="true"]'); if(on&&on.scrollIntoView&&render._lastDay!==S.day){on.scrollIntoView({block:"nearest",inline:"center"});render._lastDay=S.day}
+  fab.hidden=!(S.tab==="budget"&&S.canWrite!==false&&!!S.family);
+  renderConn();
+  var sub=document.getElementById("sub"); if(sub&&S.family)sub.innerHTML=esc(famName(S.family))+', <bdi dir="ltr">30.11–4.12.2026</bdi>';
+}
+function renderConn(){
+  var el=document.getElementById("conn"), tx=document.getElementById("connTxt"), q=S.queue.length;
+  el.className="pill";
+  if(S.conn==="online"&&!q){el.classList.add("ok");tx.textContent="מסונכרן"}
+  else if(S.conn==="online"&&q){el.classList.add("wait");tx.textContent="מסנכרן "+q+"…"}
+  else if(S.conn==="loading"){tx.textContent="מתחבר…"}
+  else {el.classList.add("off");tx.textContent=q?"אופליין | "+q+" ממתינים":"אופליין"}
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",function(ev){
+  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],#offline,#fab,#conn,#scrim");
+  if(!t)return;
+  if(t.id==="login"){doLogin();return}
+  if(t.id==="logout"){if(window.__fb)window.__fb.logout();return}
+  if(t.dataset.bview){S.bview=t.dataset.bview;render();return}
+  if(t.dataset.chg){openChoice(t.dataset.chg);return}
+  if(t.dataset.rst){openRst(t.dataset.rst);return}
+  if(t.dataset.cksec){addCk(t.dataset.cksec);return}
+  if(t.dataset.ckdel){var cid=t.dataset.ckdel,it=checkView().find(function(c){return c.id===cid});askConfirm("למחוק את ״"+(it?it.text:"")+"״?","מחיקה",true).then(function(ok){if(ok){enqueue({t:"ck_del",id:cid});toast("נמחק")}});return}
+  if(t.dataset.tab){S.tab=t.dataset.tab;LS.set("tab",S.tab);render();return}
+  if(t.dataset.day){S.day=t.dataset.day;render();window.scrollTo(0,0);return}
+  if(t.dataset.area){S.area=t.dataset.area;render();return}
+  if(t.dataset.copy){copyText(t.dataset.copy);return}
+  if(t.dataset.del){var eid=t.dataset.del;askConfirm("למחוק את ההוצאה?","מחיקה",true).then(function(ok){if(ok)enqueue({t:"del",id:eid})});return}
+    if(t.id==="offline"){saveOffline();return}
+  if(t.id==="fab"){openExpense();return}
+  if(t.id==="conn"){toast(S.conn==="online"?"מחובר. שינויים נשמרים לכולם בזמן אמת.":"אין חיבור. שינויים נשמרים בטלפון ויישלחו כשהחיבור יחזור.");return}
+  if(t.id==="scrim"){closeSheet();return}
+});
+document.addEventListener("change",function(ev){
+  var t=ev.target;
+  if(t.id==="planFile"&&t.files&&t.files[0]){importPlan(t.files[0]);t.value="";return}
+  if(t.dataset&&t.dataset.ck){enqueue({t:"ck_set",id:t.dataset.ck,v:{done:t.checked}});return}
+  if(t.dataset&&t.dataset.paid){enqueue({t:"paid",id:t.dataset.paid,v:t.checked});return}
+  if(t.id==="cap"){var cv=parseInt(t.value,10);enqueue({t:"cap",v:cv>0?cv:0});return}
+  if(t.id==="rate"){var v=parseFloat(t.value);if(v>0){enqueue({t:"rate",v:v})}}
+});
+function copyText(s){
+  function done(){toast("הועתק: "+s)}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done,fallback)}else fallback();
+  function fallback(){var ta=document.createElement("textarea");ta.value=s;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){toast(s)}ta.remove()}
+}
+
+/* ---------- expense sheet ---------- */
+var sheetState={cur:"PLN",cat:"food"};
+function openExpense(){
+  var sh=document.getElementById("sheet");
+  sh.innerHTML='<h2 id="sheetTitle">הוצאה חדשה</h2>'+
+   '<div class="field"><label for="xAmt">סכום</label><div class="amtrow"><input id="xAmt" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0"><div class="seg" role="group" aria-label="מטבע"><button type="button" data-cur="PLN" aria-pressed="'+(sheetState.cur==="PLN")+'">zł</button><button type="button" data-cur="ILS" aria-pressed="'+(sheetState.cur==="ILS")+'">₪</button></div></div></div>'+
+   '<div class="field"><label>קטגוריה</label><div class="catgrid">'+CATS.map(function(c){return '<button type="button" data-cat="'+c.id+'" aria-pressed="'+(sheetState.cat===c.id)+'">'+c.name+'</button>'}).join("")+'</div></div>'+
+   '<div class="field"><label for="xNote">על מה</label><input id="xNote" type="text" placeholder="למשל: שוקו בשוק הכריסמס"></div>'+
+   '<div class="field"><label for="xDate">תאריך</label><input id="xDate" type="date" value="'+todayISO()+'"></div>'+
+   '<label class="chk" for="xShared"><input id="xShared" type="checkbox">משותף לכל החבורה (יתחלק שווה בין המשפחות)</label>'+
+   '<button class="btn primary" id="xSave" type="button">שמירת הוצאה</button><button class="btn" id="xCancel" type="button">ביטול</button>';
+  document.getElementById("scrim").classList.add("open"); sh.classList.add("open");
+  setTimeout(function(){var a=document.getElementById("xAmt");a&&a.focus()},60);
+  sh.onclick=function(e){
+    var b=e.target.closest("button"); if(!b)return;
+    if(b.dataset.cur){sheetState.cur=b.dataset.cur;sh.querySelectorAll("[data-cur]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.cur===sheetState.cur)})}
+    if(b.dataset.cat){sheetState.cat=b.dataset.cat;sh.querySelectorAll("[data-cat]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.cat===sheetState.cat)})}
+    if(b.id==="xCancel")closeSheet();
+    if(b.id==="xSave"){
+      var amt=parseFloat(document.getElementById("xAmt").value);
+      if(!(amt>0)){toast("צריך להזין סכום");return}
+      var data={amount:amt,currency:sheetState.cur,cat:sheetState.cat,note:document.getElementById("xNote").value.trim().slice(0,120),date:document.getElementById("xDate").value||todayISO(),ts:Date.now(),family:S.family,by:S.email,shared:document.getElementById("xShared").checked};
+      enqueue({t:"add",id:uid(),data:data}); closeSheet(); toast("ההוצאה נשמרה");
+    }
+  };
+}
+function openRst(name){
+  if(S.canWrite===false){toast("אין הרשאת עריכה");return}
+  var r=(S.plan.restaurants||[]).find(function(x){return x.name===name}); if(!r)return;
+  var cur=rStatus(r), opts=["confirmed","pending","optional","backup","dropped"];
+  var sh=document.getElementById("sheet");
+  sh.innerHTML='<h2 id="sheetTitle">'+esc(r.name)+'</h2><p class="muted" style="margin:-6px 0 12px">סטטוס ההזמנה</p><div class="st-opts">'+
+    opts.map(function(s){return '<button type="button" data-st="'+s+'" aria-pressed="'+(cur===s)+'"><span class="badge b-'+s+'">'+STATUS[s]+'</span>'+({confirmed:"יש אישור הזמנה",pending:"נשלחה בקשה / מחכים לתשובה",optional:"רק אם מתאים ביום",backup:"חלופה אם הראשי לא מסתדר",dropped:"ירד מהתכנון"}[s])+'</button>'}).join("")+
+    '</div>'+(cur!==r.status?'<button class="btn" type="button" data-st="__reset">חזרה לסטטוס בתוכנית ('+(STATUS[r.status]||"ללא")+')</button>':"")+'<button class="btn" type="button" id="stCancel">ביטול</button>';
+  document.getElementById("scrim").classList.add("open"); sh.classList.add("open");
+  sh.onclick=function(e){var b=e.target.closest("button");if(!b)return;
+    if(b.id==="stCancel"){closeSheet();return}
+    var v=b.dataset.st; if(!v)return;
+    enqueue({t:"rst",id:rkey(r.name),v:v==="__reset"?null:v}); closeSheet();
+    toast(v==="__reset"?"חזר לסטטוס בתוכנית":"עודכן: "+STATUS[v]);
+  };
+}
+function askConfirm(msg,okLabel,danger){
+  return new Promise(function(res){
+    var sh=document.getElementById("sheet");
+    sh.innerHTML='<h2 id="sheetTitle" style="font-size:24px">'+tx(msg.split("\n")[0])+'</h2>'+(msg.indexOf("\n")>0?'<p class="muted" style="margin:0 0 8px;font-size:15px">'+tx(msg.split("\n").slice(1).join(" ").trim())+'</p>':"")+
+      '<button class="btn primary" id="cfOk" type="button"'+(danger?' style="background:var(--alp);border-color:var(--alp)"':"")+'>'+esc(okLabel||"אישור")+'</button><button class="btn" id="cfNo" type="button">ביטול</button>';
+    document.getElementById("scrim").classList.add("open"); sh.classList.add("open");
+    var done=function(v){sh.onclick=null;closeSheet();res(v)};
+    sh.onclick=function(e){var b=e.target.closest("button");if(!b)return;if(b.id==="cfOk")done(true);if(b.id==="cfNo")done(false)};
+    document.getElementById("scrim").onclick=function(){done(false)};
+  });
+}
+function closeSheet(){document.getElementById("scrim").classList.remove("open");document.getElementById("sheet").classList.remove("open")}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeSheet();
+  if(e.key==="Enter"&&e.target.getAttribute&&e.target.getAttribute("data-cksec-input")){e.preventDefault();addCk(e.target.getAttribute("data-cksec-input"))}});
+function addCk(sec){
+  var inp=document.querySelector('[data-cksec-input="'+(window.CSS&&CSS.escape?CSS.escape(sec):sec)+'"]'); if(!inp)return;
+  var v=inp.value.trim().slice(0,120); if(!v){inp.focus();return}
+  var mx=checkView().reduce(function(m,c){return Math.max(m,c.order||0)},0);
+  enqueue({t:"ck_add",id:uid(),data:{text:v,section:sec,family:sec==="כל החבורה"?"all":S.family,group:"",done:false,order:mx+1,ts:Date.now(),by:S.email}});
+  setTimeout(function(){var n=document.querySelector('[data-cksec-input="'+(window.CSS&&CSS.escape?CSS.escape(sec):sec)+'"]');if(n)n.focus()},30);
+}
+
+/* ---------- write queue (offline-first) ---------- */
+function enqueue(op){
+  if(op.t==="chc"){S.queue=S.queue.filter(function(o){return !(o.t==="chc"&&o.id===op.id)})}
+  if(op.t==="chx_del"){var pend=S.queue.some(function(o){return o.t==="chx_add"&&o.id===op.id&&o.data.id===op.oid});
+    if(pend){S.queue=S.queue.filter(function(o){return !((o.t==="chx_add"&&o.id===op.id&&o.data.id===op.oid)||(o.t==="chc"&&o.id===op.id&&o.v===op.oid))});LS.set("queue",S.queue);render();return}}
+  if(op.t==="rst"){S.queue=S.queue.filter(function(o){return !(o.t==="rst"&&o.id===op.id)})}
+  if(op.t==="cap"){S.queue=S.queue.filter(function(o){return o.t!=="cap"});var cp={};cp["cap_"+S.family]=op.v;S.settings=Object.assign({},S.settings,cp);LS.set("settings",S.settings)}
+  if(op.t==="paid"||op.t==="rate"){S.queue=S.queue.filter(function(o){return !(o.t===op.t&&o.id===op.id)})}
+  if(op.t==="ck_set"){var pa=S.queue.find(function(o){return o.t==="ck_add"&&o.id===op.id});
+    if(pa){pa.data=Object.assign({},pa.data,op.v);LS.set("queue",S.queue);render();flush();return}
+    S.queue=S.queue.filter(function(o){return !(o.t==="ck_set"&&o.id===op.id)})}
+  if(op.t==="ck_del"){var hadc=S.queue.some(function(o){return o.t==="ck_add"&&o.id===op.id});
+    S.queue=S.queue.filter(function(o){return !(o.t==="ck_set"&&o.id===op.id)});
+    if(hadc){S.queue=S.queue.filter(function(o){return o.id!==op.id});LS.set("queue",S.queue);render();return}}
+  if(op.t==="del"){var had=S.queue.some(function(o){return o.t==="add"&&o.id===op.id});
+    if(had){S.queue=S.queue.filter(function(o){return o.id!==op.id});LS.set("queue",S.queue);render();return}}
+  if(op.t==="rate"){S.settings=Object.assign({},S.settings,{rate:op.v});LS.set("settings",S.settings)}
+  S.queue.push(op); LS.set("queue",S.queue); render(); flush();
+}
+var flushing=false;
+async function flush(){
+  if(flushing||!S.db||!navigator.onLine||!S.queue.length)return;
+  flushing=true;
+  try{
+    while(S.queue.length){
+      var op=S.queue[0];
+      try{
+        if(op.t==="add") await S.db.collection("expenses").doc(op.id).set(op.data);
+        else if(op.t==="del") await S.db.collection("expenses").doc(op.id).delete();
+        else if(op.t==="paid"){var p={};p[op.id]=op.v;try{await S.db.doc("trip/paid").update({paid:p})}catch(e){if(e&&e.code==="invalid_argument"){var cur=Object.assign({},S.paid);cur[op.id]=op.v;await S.db.doc("trip/paid").set({paid:cur})}else throw e}}
+        else if(op.t==="rate"||op.t==="cap"){var f={};f[op.t==="cap"?"cap_"+S.family:op.t]=op.v;try{await S.db.doc("trip/settings").update(f)}catch(e3){if(e3&&(e3.code==="unavailable"||e3.code==="revoked"))throw e3;await S.db.doc("trip/settings").set(Object.assign({rate:rate()},S.settings,f))}}
+        else if(op.t==="chc"||op.t==="chx_add"||op.t==="chx_del"){
+          var base=S.choices||{}, patch={};
+          if(op.t==="chc"){patch.sel={};patch.sel[op.id]=op.v}
+          else{var arr=((base.extra||{})[op.id]||[]).filter(function(o){return o.id!==(op.oid||op.data.id)});if(op.t==="chx_add")arr.push(op.data);patch.extra={};patch.extra[op.id]=arr;
+            if(op.t==="chx_del"&&base.sel&&base.sel[op.id]===op.oid){patch.sel={};patch.sel[op.id]=null}}
+          try{await S.db.doc("trip/choices").update(patch)}catch(e6){if(e6&&(e6.code==="unavailable"||e6.code==="revoked"))throw e6;
+            var full={sel:Object.assign({},base.sel||{},patch.sel||{}),extra:Object.assign({},base.extra||{},patch.extra||{})};await S.db.doc("trip/choices").set(full)}
+          var nb={sel:Object.assign({},base.sel||{},patch.sel||{}),extra:Object.assign({},base.extra||{},patch.extra||{})};S.choices=nb;LS.set("chc",nb)}
+        else if(op.t==="rst"){var sm={};sm[op.id]=op.v;try{await S.db.doc("trip/rstatus").update({s:sm})}catch(e4){if(e4&&(e4.code==="unavailable"||e4.code==="revoked"))throw e4;var all=Object.assign({},S.rst);all[op.id]=op.v;await S.db.doc("trip/rstatus").set({s:all})}}
+        else if(op.t==="ck_add") await S.db.collection("checklist").doc(op.id).set(op.data);
+        else if(op.t==="ck_del") await S.db.collection("checklist").doc(op.id).delete();
+        else if(op.t==="ck_set"){try{await S.db.collection("checklist").doc(op.id).update(op.v)}catch(e2){var c2=e2&&e2.code;if(c2==="unavailable"||c2==="revoked"||!c2)throw e2;/* item was deleted meanwhile: drop */}}
+        S.queue.shift(); LS.set("queue",S.queue);
+      }catch(e){
+        var code=e&&e.code;
+        if(code==="invalid_argument"||code==="transform_error"){S.queue.shift();LS.set("queue",S.queue);S.canWrite=false;toast("אין הרשאה לשמור. בקשו מרועי לבדוק שהמייל ברשימה");}
+        else if(code==="quota_exceeded"){S.queue.shift();LS.set("queue",S.queue);toast("האחסון מלא — מחקו הוצאות ישנות")}
+        else {S.conn="offline";break}
+      }
+    }
+  } finally { flushing=false; render(); }
+}
+window.addEventListener("online",function(){if(S.db){S.conn="online";flush()}renderConn()});
+window.addEventListener("offline",function(){S.conn="offline";renderConn()});
+
+/* ---------- db wiring (Firebase) ---------- */
+window.__onWriteDenied=function(){S.canWrite=false;toast("אין הרשאה לשמור. בקשו מרועי לבדוק שהמייל ברשימה")};
+var unsubs=[];
+function clearSubs(){unsubs.forEach(function(u){try{u()}catch(e){}});unsubs=[]}
+async function doLogin(){
+  S.loginErr=""; if(!window.__fb){toast("עוד טוען, נסו שוב בעוד רגע");return}
+  try{await window.__fb.login()}catch(e){
+    var c=e&&e.code||"";
+    if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;
+    if(c==="auth/unauthorized-domain")S.loginErr="הכתובת של האתר לא אושרה בהגדרות Firebase.";
+    else if(c==="auth/network-request-failed")S.loginErr="אין חיבור לאינטרנט.";
+    else S.loginErr="ההתחברות לא הצליחה ("+c+"). נסו לפתוח בכרום או בספארי.";
+    render();
+  }
+}
+function startData(fb){
+  var db=fb.db; S.db=db; S.conn=navigator.onLine?"online":"offline";
+  function onErr(e){ if(e&&e.code==="invalid_argument"){S.auth="denied";clearSubs();render()} }
+  unsubs.push(db.doc("trip/families").onSnapshot(function(s){
+    S.fam=s.exists?s.data():null; LS.set("fam",S.fam);
+    S.family=(S.fam&&S.fam.members&&S.fam.members[S.email])||null; LS.set("family",S.family); render();
+  },onErr));
+  unsubs.push(db.doc("trip/plan").onSnapshot(function(s){
+    S.loaded.plan=true;
+    if(s.exists){S.plan=s.data();LS.set("plan",S.plan)} else {S.plan=null}
+    S.conn=navigator.onLine?"online":"offline"; render(); flush();
+  },onErr));
+  unsubs.push(db.doc("trip/paid").onSnapshot(function(s){S.paid=(s.exists&&s.data().paid)||{};LS.set("paid",S.paid);render()},onErr));
+  unsubs.push(db.doc("trip/settings").onSnapshot(function(s){if(s.exists){S.settings=Object.assign({rate:0.8},s.data());LS.set("settings",S.settings);render()}},onErr));
+  unsubs.push(db.doc("trip/weather").onSnapshot(function(s){S.weather=s.exists?s.data():{};LS.set("wx",S.weather);render()},onErr));
+  unsubs.push(db.doc("trip/choices").onSnapshot(function(s){S.choices=s.exists?s.data():{};LS.set("chc",S.choices);render()},onErr));
+  unsubs.push(db.doc("trip/rstatus").onSnapshot(function(s){S.rst=(s.exists&&s.data().s)||{};LS.set("rst",S.rst);render()},onErr));
+  unsubs.push(db.collection("checklist").onSnapshot(function(q){
+    S.check=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}); LS.set("chk",S.check); render();
+  },onErr));
+  unsubs.push(db.collection("expenses").onSnapshot(function(q){
+    S.expenses=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}); LS.set("exp",S.expenses); render();
+  },onErr));
+}
+function onFB(fb){
+  window.__fb=fb;
+  if(fb.noconfig){S.auth="noconfig";render();return}
+  fb.onUser(function(u){
+    clearSubs();
+    if(!u){S.auth="out";S.email="";S.db=null;S.conn="offline";render();return}
+    S.email=String(u.email||"").toLowerCase(); S.auth="in";
+    if(S.fam&&S.fam.members)S.family=S.fam.members[S.email]||null;
+    render(); startData(fb);
+  });
+}
+window.__onFB=onFB;
+
+/* ---------- offline copy ---------- */
+function staticDoc(){
+  S._static=true;
+  var data={choices:S.choices,rst:rstMap(),plan:S.plan,paid:paidMap(),expenses:expensesView().map(function(e){var c=Object.assign({},e);delete c._pending;return c}),settings:S.settings,weather:S.weather};
+  var css=document.getElementById("app-css").textContent;
+  var stamp=new Date().toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"});
+  var radios=TABS.map(function(t,i){return '<input type="radio" name="tb" id="r-'+t.id+'"'+(i===0?" checked":"")+' hidden>'}).join("");
+  var labels=TABS.map(function(t){return '<label for="r-'+t.id+'" class="tab" id="l-'+t.id+'">'+t.ic+t.name+'</label>'}).join("");
+  var keep=S.tab; 
+  var parts={
+    day:(S.plan.days||[]).map(function(d){return '<section class="sday">'+dayHTML(d,true)+'</section>'}).join('<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">'),
+    budget:viewBudget(true), food:viewFood(true), hotels:viewHotels(true), check:viewCheck(true), info:viewInfo(true)
+  };
+  S.tab=keep; S._static=false;
+  var panes=TABS.map(function(t){return '<div class="pane" id="p-'+t.id+'">'+parts[t.id]+'</div>'}).join("");
+  var extra='.pane{display:none}'+TABS.map(function(t){return '#r-'+t.id+':checked~main #p-'+t.id+'{display:block}#r-'+t.id+':checked~nav #l-'+t.id+'{color:var(--lake);font-weight:600}'}).join("")+'.static-note{font-size:12.5px;color:var(--ink2);padding:10px 0}';
+  return '<!DOCTYPE html><html lang="he" dir="rtl" data-theme="light" style="color-scheme:light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>קרקוב, עותק אופליין</title><style>'+css+extra+'</style></head><body>'+radios+
+   '<header class="top"><div class="top-in"><div class="brand">קרקוב בכריסמס<small>עותק אופליין מ־'+esc(stamp)+'</small></div></div></header>'+
+   '<main class="wrap"><p class="static-note">עותק לקריאה בלבד. עדכונים נעשים באפליקציה כשיש אינטרנט.</p>'+panes+'</main>'+
+   '<nav class="tabs"><div class="tabs-in">'+labels+'</div></nav>'+
+   '<script>window.__OFFLINE__='+JSON.stringify({savedAt:stamp}).replace(/</g,"\\u003c")+'<\/script></body></html>';
+}
+async function saveOffline(){
+  if(!S.plan){toast("אין עדיין נתונים לשמור");return}
+  var html=staticDoc(), name="krakow-trip-offline.html";
+  var dl=window.claude&&window.claude.use?await window.claude.use("downloads").catch(function(){return null}):null;
+  if(dl){try{await dl.save({filename:name,data:new Blob([html],{type:"text/html"})});toast("נשמר. פתחו את הקובץ מהטלפון כשאין קליטה.");return}catch(e){if(e&&e.code==="cancelled")return}}
+  try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));a.download=name;document.body.appendChild(a);a.click();a.remove();toast("הקובץ ירד")}catch(e){toast("השמירה לא זמינה כאן")}
+}
+
+/* ---------- boot ---------- */
+render();
+if(window.__fbApi)onFB(window.__fbApi);
+setInterval(function(){if(S.tab==="day"&&!document.querySelector(".sheet.open"))render()},60000);
+})();
+</script>
+</body>
+</html>
