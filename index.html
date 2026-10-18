@@ -801,37 +801,98 @@ function gateHTML(){
 }
 var ADMIN_EMAIL="atomickurd@gmail.com";
 function isAdmin(){return S.email===ADMIN_EMAIL}
+var TPL={
+ adult:[["לבוש חורף","מעיל חם ועמיד למים"],["לבוש חורף","כובע, צעיף וכפפות"],["לבוש חורף","נעליים נוחות ועמידות למים"],["לבוש חורף","שכבה תרמית"],["לטיסה ולדרך","מטען ובטריה ניידת"],["לטיסה ולדרך","אוזניות"],["מסמכים","דרכון בתוקף"],["בריאות","תרופות אישיות"]],
+ child:[["לבוש חורף","מעיל חם ועמיד למים"],["לבוש חורף","כובע, צעיף וכפפות (זוג רזרבי)"],["לבוש חורף","מגפיים או נעליים עמידות למים"],["לבוש חורף","שכבה תרמית לגוף ולרגליים"],["לטיסה ולדרך","עגלה או מנשא"],["לטיסה ולדרך","חטיפים ובקבוק מים"],["לטיסה ולדרך","טאבלט עם סרטים מורדים ואוזניות"],["לטיסה ולדרך","בגדי החלפה בתיק היד"],["לטיסה ולדרך","בובה או שמיכה אהובה"],["מסמכים","דרכון בתוקף"],["בריאות","תרופות קבועות, מד חום ותרופה להורדת חום"],["בריאות","קרם לחות ושפתון לקור"]],
+ shared:[["מסמכים","ביטוח נסיעות"],["מסמכים","אישורי הזמנה (מלון, מסעדות, הסעות)"],["לפני הטיסה","לקנות כרטיסי ואוול באתר הרשמי (נפתח כחודש מראש)"],["לפני הטיסה","eSIM או חבילת גלישה"],["לפני הטיסה","מעט זלוטי במזומן"],["לפני הטיסה","מטריה קטנה"]]
+};
 function adminHTML(){
   if(!isAdmin())return "";
   var fam=S.fam||{families:[],members:{}}, mem=fam.members||{}, fl=fam.families||[];
   var rows=fl.map(function(f){
-    var em=Object.keys(mem).filter(function(e){return mem[e]===f.id}).sort();
-    return '<div class="item"><div class="l">'+esc(f.name)+'</div><div>'+(em.length?em.map(function(e){
-      return '<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin:2px 0"><span dir="ltr" style="font-size:14px">'+esc(e)+'</span>'+(e===ADMIN_EMAIL?'<span class="muted" style="font-size:12px">אדמין</span>':'<button class="btn" type="button" data-rmuser="'+esc(e)+'" style="padding:4px 10px;min-height:0">הסרה</button>')+'</div>'}).join(""):'<span class="muted">אין כתובות</span>')+'</div></div>';
+    var people=f.people||[], used={};
+    people.forEach(function(p){if(p.email)used[p.email]=1});
+    var emailsOnly=Object.keys(mem).filter(function(e){return mem[e]===f.id&&!used[e]}).sort();
+    var out=people.map(function(p){
+      return '<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin:4px 0"><span>'+esc(p.name)+' <span class="muted" style="font-size:12px">'+(p.type==="child"?"ילד":"מבוגר")+'</span>'+(p.email?'<br><span dir="ltr" style="font-size:13px">'+esc(p.email)+'</span>':'')+'</span><span style="display:flex;gap:6px">'+
+        (p.email?'':'<button class="btn" type="button" data-pemail="'+esc(p.id)+'" style="padding:4px 10px;min-height:0;margin:0">הוספת אימייל</button>')+
+        '<button class="btn" type="button" data-rmperson="'+esc(p.id)+'" style="padding:4px 10px;min-height:0;margin:0">הסרה</button></span></div>'}).join("");
+    out+=emailsOnly.map(function(e){
+      return '<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin:4px 0"><span dir="ltr" style="font-size:14px">'+esc(e)+'</span>'+(e===ADMIN_EMAIL?'<span class="muted" style="font-size:12px">אדמין</span>':'<button class="btn" type="button" data-rmuser="'+esc(e)+'" style="padding:4px 10px;min-height:0;margin:0">הסרה</button>')+'</div>'}).join("");
+    return '<div class="item"><div class="l">'+esc(f.name)+'</div><div>'+(out||'<span class="muted">עוד אין בני משפחה</span>')+'</div></div>';
   }).join("");
-  return '<div class="card"><h3>ניהול משתמשים</h3><p>רק אתה רואה את זה. מי שמופיע כאן יכול להיכנס עם Google ולראות את הטיול.</p>'+
+  return '<div class="card"><h3>ניהול משפחות</h3><p>רק אתה רואה את זה. מי שיש לו אימייל יכול להיכנס עם Google. אימייל לא חובה, למשל לילדים.</p>'+
    (rows||'<p class="muted">עוד אין משפחות. טוענים קודם קובץ תוכנית.</p>')+
-   '<div class="field"><label for="aEmail">אימייל Google להוספה</label><input id="aEmail" type="email" dir="ltr" inputmode="email" placeholder="name@gmail.com"></div>'+
    '<div class="field"><label for="aFam">משפחה</label><select id="aFam">'+fl.map(function(f){return '<option value="'+esc(f.id)+'">'+esc(f.name)+'</option>'}).join("")+'<option value="__new">משפחה חדשה…</option></select></div>'+
    '<div class="field" id="aNewWrap" hidden><label for="aNewFam">שם המשפחה החדשה</label><input id="aNewFam" type="text" placeholder="למשל: כהן"></div>'+
-   '<button class="btn primary" id="aAdd" type="button">הוספת משתמש</button></div>';
+   '<div class="field"><label for="pType">סוג</label><select id="pType"><option value="adult">מבוגר</option><option value="child">ילד</option></select></div>'+
+   '<div class="field"><label for="pName">שם (לא חובה)</label><input id="pName" type="text" placeholder="אפשר להשאיר ריק"></div>'+
+   '<div class="field"><label for="pEmail">אימייל Google (לא חובה)</label><input id="pEmail" type="email" dir="ltr" inputmode="email" placeholder="name@gmail.com"></div>'+
+   '<button class="btn primary" id="aAdd" type="button">הוספת בן משפחה</button><p class="muted" style="font-size:13px;margin-top:8px">נוצר לו צ׳קליסט מוכן לפי הסוג. מבוגר מקבל רשימת מבוגרים, וילד רשימת ילדים.</p></div>';
 }
 async function saveFamilies(next,msg){
-  try{await S.db.doc("trip/families").set(next);S.fam=next;LS.set("fam",next);toast(msg);render()}
-  catch(e){toast("השמירה נכשלה. בדקו חיבור ונסו שוב.")}
+  try{await S.db.doc("trip/families").set(next);S.fam=next;LS.set("fam",next);if(msg)toast(msg);render();return true}
+  catch(e){toast("השמירה נכשלה. בדקו חיבור ונסו שוב.");return false}
 }
-function addUser(){
-  var em=(document.getElementById("aEmail").value||"").trim().toLowerCase();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){toast("כתובת אימייל לא תקינה");return}
+function validEmail(em){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)}
+async function addPerson(){
+  var em=(document.getElementById("pEmail").value||"").trim().toLowerCase();
+  if(em&&!validEmail(em)){toast("כתובת אימייל לא תקינה");return}
+  var type=document.getElementById("pType").value==="child"?"child":"adult";
   var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}}));
   fam.families=fam.families||[]; fam.members=fam.members||{};
-  var fid=document.getElementById("aFam").value;
+  var fid=document.getElementById("aFam").value, f;
   if(fid==="__new"||!fid){
     var nm=(document.getElementById("aNewFam").value||"").trim();
     if(!nm){toast("צריך שם למשפחה החדשה");return}
-    fid="f"+Date.now().toString(36); fam.families.push({id:fid,name:nm,sections:[nm]});
-  }
-  fam.members[em]=fid; saveFamilies(fam,"המשתמש נוסף");
+    fid="f"+Date.now().toString(36); f={id:fid,name:nm,sections:[],people:[]}; fam.families.push(f);
+  } else f=fam.families.find(function(x){return x.id===fid});
+  if(!f){toast("המשפחה לא נמצאה");return}
+  f.people=f.people||[]; f.sections=f.sections||[];
+  if(em&&fam.members[em]&&fam.members[em]!==fid){toast("האימייל הזה כבר שייך למשפחה אחרת");return}
+  // placeholder section created before people existed
+  if(!f.people.length) f.sections=f.sections.filter(function(s){return s!==f.name||checkView().some(function(c){return c.family===fid&&c.section===s})});
+  var base=(document.getElementById("pName").value||"").trim().slice(0,30)||(type==="child"?"ילד":"מבוגר"), name=base, n=1;
+  while(f.sections.indexOf(name)>=0||name==="משותף"){n++;name=base+" "+n}
+  var person={id:"p"+Date.now().toString(36),name:name,type:type}; if(em)person.email=em;
+  f.people.push(person); f.sections.push(name);
+  var items=TPL[type].map(function(x){return {group:x[0],text:x[1],section:name}});
+  if(f.sections.indexOf("משותף")<0){f.sections.push("משותף"); TPL.shared.forEach(function(x){items.push({group:x[0],text:x[1],section:"משותף"})})}
+  if(em)fam.members[em]=fid;
+  var mx=checkView().reduce(function(m,c){return Math.max(m,c.order||0)},0);
+  var ok=await saveFamilies(fam,null); if(!ok)return;
+  try{
+    await Promise.all(items.map(function(it,i){return S.db.collection("checklist").doc(uid()).set({text:it.text,section:it.section,group:it.group,family:fid,done:false,order:mx+i+1,ts:Date.now(),by:S.email})}));
+    toast("נוסף: "+name);
+  }catch(e){toast("הצ׳קליסט לא נוצר במלואו. נסו שוב.")}
+}
+async function removePerson(pid){
+  var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}})), f=null, p=null;
+  (fam.families||[]).forEach(function(x){(x.people||[]).forEach(function(y){if(y.id===pid){f=x;p=y}})});
+  if(!p)return;
+  if(!(await askConfirm("להסיר את "+p.name+"?"+(p.email?"\nהוא לא יוכל יותר להיכנס לאפליקציה.":"")+"\nהצ׳קליסט שלו נשאר.","הסרה",true)))return;
+  f.people=f.people.filter(function(y){return y.id!==pid});
+  if(p.email&&p.email!==ADMIN_EMAIL)delete fam.members[p.email];
+  saveFamilies(fam,"הוסר");
+}
+function openPersonEmail(pid){
+  var sh=document.getElementById("sheet");
+  sh.innerHTML='<h2 id="sheetTitle">הוספת אימייל</h2><div class="field"><label for="peEmail">אימייל Google</label><input id="peEmail" type="email" dir="ltr" inputmode="email" placeholder="name@gmail.com"></div><button class="btn primary" id="peSave" type="button">שמירה</button><button class="btn" id="peCancel" type="button">ביטול</button>';
+  document.getElementById("scrim").classList.add("open"); sh.classList.add("open");
+  sh.onclick=async function(e){
+    var b=e.target.closest("button"); if(!b)return;
+    if(b.id==="peCancel")closeSheet();
+    if(b.id==="peSave"){
+      var em=(document.getElementById("peEmail").value||"").trim().toLowerCase();
+      if(!validEmail(em)){toast("כתובת אימייל לא תקינה");return}
+      var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}})), f=null, p=null;
+      (fam.families||[]).forEach(function(x){(x.people||[]).forEach(function(y){if(y.id===pid){f=x;p=y}})});
+      if(!p)return;
+      if(fam.members[em]&&fam.members[em]!==f.id){toast("האימייל הזה כבר שייך למשפחה אחרת");return}
+      p.email=em; fam.members[em]=f.id;
+      if(await saveFamilies(fam,"האימייל נוסף"))closeSheet();
+    }
+  };
 }
 async function removeUser(em){
   if(em===ADMIN_EMAIL)return;
@@ -891,7 +952,7 @@ function renderConn(){
 
 /* ---------- events ---------- */
 document.addEventListener("click",function(ev){
-  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],[data-flight],#aAdd,#offline,#fab,#conn,#scrim");
+  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],[data-rmperson],[data-pemail],[data-flight],#aAdd,#offline,#fab,#conn,#scrim");
   if(!t)return;
   if(t.id==="login"){doLogin();return}
   if(t.id==="logout"){if(window.__fb)window.__fb.logout();return}
@@ -906,7 +967,9 @@ document.addEventListener("click",function(ev){
   if(t.dataset.copy){copyText(t.dataset.copy);return}
   if(t.dataset.del){var eid=t.dataset.del;askConfirm("למחוק את ההוצאה?","מחיקה",true).then(function(ok){if(ok)enqueue({t:"del",id:eid})});return}
     if(t.id==="offline"){saveOffline();return}
-  if(t.id==="aAdd"){addUser();return}
+  if(t.id==="aAdd"){addPerson();return}
+  if(t.dataset.rmperson){removePerson(t.dataset.rmperson);return}
+  if(t.dataset.pemail){openPersonEmail(t.dataset.pemail);return}
   if(t.dataset.rmuser){removeUser(t.dataset.rmuser);return}
   if(t.dataset.flight){openFlight(t.dataset.flight);return}
   if(t.id==="fab"){openExpense();return}
