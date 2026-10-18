@@ -656,9 +656,9 @@ function viewInfo(isStatic){
   if(isStatic) return html;
   var when=S.plan.syncedAt?new Date(S.plan.syncedAt).toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):"";
   html+='<h2 class="sec-title">חשבון ועדכונים</h2><div class="card"><h3>'+esc(famName(S.family)||"בלי משפחה")+'</h3><div class="sub">'+L(S.email)+'</div>'+
-   (S.family?"":'<p style="color:var(--off)">הכתובת הזו לא משויכת למשפחה. בקשו מרועי לעדכן.</p>')+
+   (S.family?"":'<p style="color:var(--off)">הכתובת הזו לא משויכת למשפחה. בקשו מרועי להוסיף אותה.</p>')+
    '<button class="btn" type="button" id="logout">יציאה מהחשבון</button></div>'+
-   importHTML(false).replace('</h3>','</h3>'+(when?'<div class="sub">עודכנה לאחרונה '+esc(when)+'</div>':''))+
+   adminHTML()+importHTML(false).replace('</h3>','</h3>'+(when?'<div class="sub">עודכנה לאחרונה '+esc(when)+'</div>':''))+
    '<div class="card"><h3>עותק אופליין</h3><p>קובץ אחד עם כל הנתונים כפי שהם עכשיו, נפתח בטלפון גם בלי אינטרנט. כדאי לשמור עותק לפני הטיסה.</p>'+
    '<button class="btn" id="offline" type="button">שמירת עותק אופליין</button></div>';
   return html;
@@ -761,7 +761,47 @@ function gateHTML(){
     (S.loginErr?'<p style="color:var(--off);margin-top:14px">'+esc(S.loginErr)+'</p>':"")+
     '<small>אם חלון ההתחברות לא נפתח, כנראה הקישור נפתח בתוך וואטסאפ או אינסטגרם. פתחו אותו בכרום או בספארי ונסו שוב.</small></div>';
 }
+var ADMIN_EMAIL="atomickurd@gmail.com";
+function isAdmin(){return S.email===ADMIN_EMAIL}
+function adminHTML(){
+  if(!isAdmin())return "";
+  var fam=S.fam||{families:[],members:{}}, mem=fam.members||{}, fl=fam.families||[];
+  var rows=fl.map(function(f){
+    var em=Object.keys(mem).filter(function(e){return mem[e]===f.id}).sort();
+    return '<div class="item"><div class="l">'+esc(f.name)+'</div><div>'+(em.length?em.map(function(e){
+      return '<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin:2px 0"><span dir="ltr" style="font-size:14px">'+esc(e)+'</span>'+(e===ADMIN_EMAIL?'<span class="muted" style="font-size:12px">אדמין</span>':'<button class="btn" type="button" data-rmuser="'+esc(e)+'" style="padding:4px 10px;min-height:0">הסרה</button>')+'</div>'}).join(""):'<span class="muted">אין כתובות</span>')+'</div></div>';
+  }).join("");
+  return '<div class="card"><h3>ניהול משתמשים</h3><p>רק אתה רואה את זה. מי שמופיע כאן יכול להיכנס עם Google ולראות את הטיול.</p>'+
+   (rows||'<p class="muted">עוד אין משפחות. טוענים קודם קובץ תוכנית.</p>')+
+   '<div class="field"><label for="aEmail">אימייל Google להוספה</label><input id="aEmail" type="email" dir="ltr" inputmode="email" placeholder="name@gmail.com"></div>'+
+   '<div class="field"><label for="aFam">משפחה</label><select id="aFam">'+fl.map(function(f){return '<option value="'+esc(f.id)+'">'+esc(f.name)+'</option>'}).join("")+'<option value="__new">משפחה חדשה…</option></select></div>'+
+   '<div class="field" id="aNewWrap" hidden><label for="aNewFam">שם המשפחה החדשה</label><input id="aNewFam" type="text" placeholder="למשל: כהן"></div>'+
+   '<button class="btn primary" id="aAdd" type="button">הוספת משתמש</button></div>';
+}
+async function saveFamilies(next,msg){
+  try{await S.db.doc("trip/families").set(next);S.fam=next;LS.set("fam",next);toast(msg);render()}
+  catch(e){toast("השמירה נכשלה. בדקו חיבור ונסו שוב.")}
+}
+function addUser(){
+  var em=(document.getElementById("aEmail").value||"").trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){toast("כתובת אימייל לא תקינה");return}
+  var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}}));
+  fam.families=fam.families||[]; fam.members=fam.members||{};
+  var fid=document.getElementById("aFam").value;
+  if(fid==="__new"||!fid){
+    var nm=(document.getElementById("aNewFam").value||"").trim();
+    if(!nm){toast("צריך שם למשפחה החדשה");return}
+    fid="f"+Date.now().toString(36); fam.families.push({id:fid,name:nm,sections:[nm]});
+  }
+  fam.members[em]=fid; saveFamilies(fam,"המשתמש נוסף");
+}
+async function removeUser(em){
+  if(em===ADMIN_EMAIL)return;
+  if(!(await askConfirm("להסיר את "+em+"?\nהוא לא יוכל יותר להיכנס לאפליקציה.","הסרה",true)))return;
+  var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}})); delete fam.members[em]; saveFamilies(fam,"המשתמש הוסר");
+}
 function importHTML(first){
+  if(!isAdmin())return first?'<div class="empty"><h2>התוכנית עוד לא נטענה</h2><p class="muted">רועי צריך לטעון אותה. נסו שוב בעוד כמה דקות.</p></div>':"";
   return '<div class="'+(first?"gate":"card")+'">'+(first?'<h2>טעינת התוכנית</h2><p>האפליקציה ריקה. טוענים את קובץ התוכנית שרועי קיבל מ־Claude, ומאותו רגע היא אצל כולם.</p>':'<h3>עדכון התוכנית</h3><p>כשיש שינוי בלו״ז או הזמנה חדשה, Claude מכין קובץ תוכנית מעודכן. טוענים אותו כאן והוא מתעדכן אצל כולם. הוצאות, צ׳קליסט וסימונים נשמרים.</p>')+
     '<label class="'+(first?"gbtn":"btn")+'" style="display:inline-flex;justify-content:center" for="planFile">בחירת קובץ תוכנית</label><input id="planFile" type="file" accept=".json,application/json" hidden></div>';
 }
@@ -813,7 +853,7 @@ function renderConn(){
 
 /* ---------- events ---------- */
 document.addEventListener("click",function(ev){
-  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],#offline,#fab,#conn,#scrim");
+  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],#aAdd,#offline,#fab,#conn,#scrim");
   if(!t)return;
   if(t.id==="login"){doLogin();return}
   if(t.id==="logout"){if(window.__fb)window.__fb.logout();return}
@@ -828,12 +868,15 @@ document.addEventListener("click",function(ev){
   if(t.dataset.copy){copyText(t.dataset.copy);return}
   if(t.dataset.del){var eid=t.dataset.del;askConfirm("למחוק את ההוצאה?","מחיקה",true).then(function(ok){if(ok)enqueue({t:"del",id:eid})});return}
     if(t.id==="offline"){saveOffline();return}
+  if(t.id==="aAdd"){addUser();return}
+  if(t.dataset.rmuser){removeUser(t.dataset.rmuser);return}
   if(t.id==="fab"){openExpense();return}
   if(t.id==="conn"){toast(S.conn==="online"?"מחובר. שינויים נשמרים לכולם בזמן אמת.":"אין חיבור. שינויים נשמרים בטלפון ויישלחו כשהחיבור יחזור.");return}
   if(t.id==="scrim"){closeSheet();return}
 });
 document.addEventListener("change",function(ev){
   var t=ev.target;
+  if(t.id==="aFam"){var w=document.getElementById("aNewWrap");if(w)w.hidden=t.value!=="__new";return}
   if(t.id==="planFile"&&t.files&&t.files[0]){importPlan(t.files[0]);t.value="";return}
   if(t.dataset&&t.dataset.ck){enqueue({t:"ck_set",id:t.dataset.ck,v:{done:t.checked}});return}
   if(t.dataset&&t.dataset.paid){enqueue({t:"paid",id:t.dataset.paid,v:t.checked});return}
