@@ -374,7 +374,7 @@ var S={
   weather: STATIC? (window.__STATIC_DATA__.weather||{}) : LS.get("wx",{}),
   queue: STATIC? [] : LS.get("queue",[]),
   tab: LS.get("tab","day"), day:null, area:"הכל",
-  db:null, user:null, canWrite:null, conn:"loading", loaded:{plan:false}, auth:"loading", email:"", fam:LS.get("fam",null), family:LS.get("family",null), bview:"mine"
+  db:null, user:null, canWrite:null, conn:"loading", loaded:{plan:false}, auth:"loading", email:"", fam:LS.get("fam",null), family:LS.get("family",null), bview:"mine", flights:LS.get("fl",null)
 };
 
 /* ---------- helpers ---------- */
@@ -580,6 +580,44 @@ function dayHTML(d,isStatic){
     '<div class="facts">'+(d.sleep?'<span>לינה: <strong><bdi>'+esc(d.sleep)+'</bdi></strong></span>':"")+(d.sunset?'<span>שקיעה: <strong>'+L(d.sunset)+'</strong></span>':"")+'</div>'+weatherHTML(d)+'</div>'+
     '<ol class="tl">'+evs+'</ol>';
 }
+var flUnsub=null, flFam=null;
+function watchFlights(){
+  if(!S.db||!S.family||flFam===S.family)return;
+  if(flUnsub){try{flUnsub()}catch(e){}}
+  flFam=S.family;
+  flUnsub=S.db.doc("trip/flights_"+S.family).onSnapshot(function(s){S.flights=s.exists?s.data():{};LS.set("fl",S.flights);render()},function(){});
+}
+function resetFlights(){if(flUnsub){try{flUnsub()}catch(e){}flUnsub=null}flFam=null;S.flights=null}
+var FLF=[["flight","מספר טיסה","text","LY 1337"],["route","מסלול","text","תל אביב ← קרקוב"],["date","תאריך","date",""],["depart","שעת המראה","time",""],["arrive","שעת נחיתה","time",""],["bag","מזוודות","text","למשל: 2 מזוודות 23 ק״ג"],["ref","מספר הזמנה","text",""]];
+function flightKind(d){var days=S.plan.days||[];if(!days.length)return null;return d.id===days[0].id?"out":(d.id===days[days.length-1].id?"back":null)}
+function flightCard(d){
+  var kind=flightKind(d); if(!kind||STATIC||!S.family)return "";
+  var f=(S.flights&&S.flights[kind])||null, has=f&&FLF.some(function(x){return f[x[0]]});
+  var rows=has?'<div class="items">'+FLF.filter(function(x){return f[x[0]]}).map(function(x){
+    var v=f[x[0]]; if(x[0]==="date"){v=v.split("-").reverse().join(".")}
+    return '<div class="item"><div class="l">'+x[1]+'</div><div>'+L(v)+'</div></div>'}).join("")+'</div>'
+    :'<p class="muted" style="margin:8px 0 0">עוד לא הוזנו פרטים. רק המשפחה שלך רואה את זה.</p>';
+  return '<div class="card"><h3>'+(kind==="out"?"הטיסה שלי לקרקוב":"הטיסה שלי חזרה")+'</h3><div class="sub">'+esc(famName(S.family))+'</div>'+rows+
+    '<button class="btn" type="button" data-flight="'+kind+'">'+(has?"עריכת פרטי טיסה":"הוספת פרטי טיסה")+'</button></div>';
+}
+function openFlight(kind){
+  var days=S.plan.days||[], d=kind==="out"?days[0]:days[days.length-1], f=(S.flights&&S.flights[kind])||{};
+  var sh=document.getElementById("sheet");
+  sh.innerHTML='<h2 id="sheetTitle">'+(kind==="out"?"הטיסה לקרקוב":"הטיסה חזרה")+'</h2><p class="muted" style="margin:-6px 0 12px">רק המשפחה שלך רואה את הפרטים האלה</p>'+
+   FLF.map(function(x){var v=f[x[0]]||(x[0]==="date"&&d?d.date:"");return '<div class="field"><label for="fl_'+x[0]+'">'+x[1]+'</label><input id="fl_'+x[0]+'" type="'+x[2]+'" '+(x[2]==="text"?'dir="auto" ':'')+'placeholder="'+esc(x[3])+'" value="'+esc(v)+'"></div>'}).join("")+
+   '<button class="btn primary" id="flSave" type="button">שמירה</button><button class="btn" id="flCancel" type="button">ביטול</button>';
+  document.getElementById("scrim").classList.add("open"); sh.classList.add("open");
+  sh.onclick=async function(e){
+    var b=e.target.closest("button"); if(!b)return;
+    if(b.id==="flCancel")closeSheet();
+    if(b.id==="flSave"){
+      var data={}; FLF.forEach(function(x){var v=(document.getElementById("fl_"+x[0]).value||"").trim().slice(0,80); if(v)data[x[0]]=v});
+      var all=Object.assign({},S.flights||{}); all[kind]=data;
+      try{await S.db.doc("trip/flights_"+S.family).set(all);S.flights=all;LS.set("fl",all);closeSheet();render();toast("הפרטים נשמרו")}
+      catch(er){toast("השמירה נכשלה. בדקו חיבור ונסו שוב.")}
+    }
+  };
+}
 function viewDay(){
   var days=S.plan.days||[];
   if(!days.length) return emptyHTML();
@@ -587,7 +625,7 @@ function viewDay(){
   var d=days.find(function(x){return x.id===S.day})||days[0], t=todayISO();
   var strip='<div class="strip" role="group" aria-label="בחירת יום">'+days.map(function(x){
     return '<button class="chip'+(x.date===t?" today":"")+'" data-day="'+x.id+'" aria-pressed="'+(x.id===d.id)+'"><b>'+(+x.date.split("-")[2])+'</b><span>'+esc(x.dow)+'</span></button>'}).join("")+'</div>';
-  return strip+dayHTML(d,false);
+  return strip+flightCard(d)+dayHTML(d,false);
 }
 
 /* ---------- restaurants ---------- */
@@ -853,7 +891,7 @@ function renderConn(){
 
 /* ---------- events ---------- */
 document.addEventListener("click",function(ev){
-  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],#aAdd,#offline,#fab,#conn,#scrim");
+  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],[data-flight],#aAdd,#offline,#fab,#conn,#scrim");
   if(!t)return;
   if(t.id==="login"){doLogin();return}
   if(t.id==="logout"){if(window.__fb)window.__fb.logout();return}
@@ -870,6 +908,7 @@ document.addEventListener("click",function(ev){
     if(t.id==="offline"){saveOffline();return}
   if(t.id==="aAdd"){addUser();return}
   if(t.dataset.rmuser){removeUser(t.dataset.rmuser);return}
+  if(t.dataset.flight){openFlight(t.dataset.flight);return}
   if(t.id==="fab"){openExpense();return}
   if(t.id==="conn"){toast(S.conn==="online"?"מחובר. שינויים נשמרים לכולם בזמן אמת.":"אין חיבור. שינויים נשמרים בטלפון ויישלחו כשהחיבור יחזור.");return}
   if(t.id==="scrim"){closeSheet();return}
@@ -1029,7 +1068,7 @@ function startData(fb){
   function onErr(e){ if(e&&e.code==="invalid_argument"){S.auth="denied";clearSubs();render()} }
   unsubs.push(db.doc("trip/families").onSnapshot(function(s){
     S.fam=s.exists?s.data():null; LS.set("fam",S.fam);
-    S.family=(S.fam&&S.fam.members&&S.fam.members[S.email])||null; LS.set("family",S.family); render();
+    S.family=(S.fam&&S.fam.members&&S.fam.members[S.email])||null; LS.set("family",S.family); watchFlights(); render();
   },onErr));
   unsubs.push(db.doc("trip/plan").onSnapshot(function(s){
     S.loaded.plan=true;
@@ -1052,11 +1091,11 @@ function onFB(fb){
   window.__fb=fb;
   if(fb.noconfig){S.auth="noconfig";render();return}
   fb.onUser(function(u){
-    clearSubs();
+    clearSubs(); resetFlights();
     if(!u){S.auth="out";S.email="";S.db=null;S.conn="offline";render();return}
     S.email=String(u.email||"").toLowerCase(); S.auth="in";
     if(S.fam&&S.fam.members)S.family=S.fam.members[S.email]||null;
-    render(); startData(fb);
+    render(); startData(fb); watchFlights();
   });
 }
 window.__onFB=onFB;
