@@ -819,6 +819,11 @@ function adminHTML(){
         '<button class="btn" type="button" data-rmperson="'+esc(p.id)+'" style="padding:4px 10px;min-height:0;margin:0">הסרה</button></span></div>'}).join("");
     out+=emailsOnly.map(function(e){
       return '<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin:4px 0"><span dir="ltr" style="font-size:14px">'+esc(e)+'</span>'+(e===ADMIN_EMAIL?'<span class="muted" style="font-size:12px">אדמין</span>':'<button class="btn" type="button" data-rmuser="'+esc(e)+'" style="padding:4px 10px;min-height:0;margin:0">הסרה</button>')+'</div>'}).join("");
+    var pn={}; people.forEach(function(p){pn[p.name]=1});
+    var secs=(f.sections||[]).slice(); checkView().forEach(function(c){if(c.family===f.id&&secs.indexOf(c.section)<0)secs.push(c.section)});
+    var orph=secs.filter(function(x){return x!=="משותף"&&!pn[x]&&(people.length||x!==f.name)&&checkView().some(function(c){return c.family===f.id&&c.section===x})});
+    out+=orph.map(function(x){var k=checkView().filter(function(c){return c.family===f.id&&c.section===x}).length;
+      return '<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;margin:4px 0"><span>'+esc(x)+' <span class="muted" style="font-size:12px">קטגוריה בלי בן משפחה, '+k+' פריטים</span></span><button class="btn" type="button" data-rmsec="'+esc(f.id)+'|'+esc(x)+'" style="padding:4px 10px;min-height:0;margin:0">מחיקה</button></div>'}).join("");
     return '<div class="item"><div class="l">'+esc(f.name)+'</div><div>'+(out||'<span class="muted">עוד אין בני משפחה</span>')+'</div></div>';
   }).join("");
   return '<div class="card"><h3>ניהול משפחות</h3><p>רק אתה רואה את זה. מי שיש לו אימייל יכול להיכנס עם Google. אימייל לא חובה, למשל לילדים.</p>'+
@@ -879,6 +884,14 @@ async function removePerson(pid){
   if(!(await saveFamilies(fam,null)))return;
   try{await Promise.all(mine.map(function(c){return S.db.collection("checklist").doc(c.id).delete()}))}catch(e){toast("חלק מהפריטים לא נמחקו. נסו שוב.");return}
   toast("הוסר");
+}
+async function removeSection(key){
+  var i=key.indexOf("|"), fid=key.slice(0,i), sec=key.slice(i+1);
+  var mine=checkView().filter(function(c){return c.family===fid&&c.section===sec});
+  if(!(await askConfirm("למחוק את הקטגוריה ״"+sec+"״ ואת "+mine.length+" הפריטים שלה?","מחיקה",true)))return;
+  var fam=JSON.parse(JSON.stringify(S.fam||{families:[],members:{}})), f=fam.families.find(function(x){return x.id===fid});
+  if(f){f.sections=(f.sections||[]).filter(function(x){return x!==sec}); if(!(await saveFamilies(fam,null)))return}
+  try{await Promise.all(mine.map(function(c){return S.db.collection("checklist").doc(c.id).delete()}));toast("הקטגוריה נמחקה")}catch(e){toast("חלק מהפריטים לא נמחקו. נסו שוב.")}
 }
 function migrateLegacy(){
   var fam=S.fam; if(!fam||!fam.families||S._mig||!isAdmin())return;
@@ -965,7 +978,7 @@ function renderConn(){
 
 /* ---------- events ---------- */
 document.addEventListener("click",function(ev){
-  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],[data-rmperson],[data-pemail],[data-flight],#aAdd,#offline,#fab,#conn,#scrim");
+  var t=ev.target.closest("#login,#logout,[data-bview],[data-chg],[data-rst],[data-cksec],[data-ckdel],[data-tab],[data-day],[data-area],[data-copy],[data-del],[data-rmuser],[data-rmperson],[data-rmsec],[data-pemail],[data-flight],#aAdd,#offline,#fab,#conn,#scrim");
   if(!t)return;
   if(t.id==="login"){doLogin();return}
   if(t.id==="logout"){if(window.__fb)window.__fb.logout();return}
@@ -982,6 +995,7 @@ document.addEventListener("click",function(ev){
     if(t.id==="offline"){saveOffline();return}
   if(t.id==="aAdd"){addPerson();return}
   if(t.dataset.rmperson){removePerson(t.dataset.rmperson);return}
+  if(t.dataset.rmsec){removeSection(t.dataset.rmsec);return}
   if(t.dataset.pemail){openPersonEmail(t.dataset.pemail);return}
   if(t.dataset.rmuser){removeUser(t.dataset.rmuser);return}
   if(t.dataset.flight){openFlight(t.dataset.flight);return}
