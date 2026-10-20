@@ -796,7 +796,7 @@ function gateHTML(){
   if(S.auth==="denied")return '<div class="gate"><h2>אין גישה לחשבון הזה</h2><p>'+L(S.email)+' לא ברשימת המשתתפים בטיול. אם זו טעות, בקשו מרועי להוסיף את הכתובת.</p><button class="gbtn" type="button" id="logout">התחברות עם חשבון אחר</button></div>';
   return '<div class="gate"><h2>קרקוב בכריסמס</h2><p>האפליקציה של הטיול, <bdi dir="ltr">30.11–4.12.2026</bdi>. נכנסים פעם אחת עם חשבון הגוגל, והטלפון יזכור.</p>'+
     '<button class="gbtn" type="button" id="login">'+GLOGO+'כניסה עם Google</button>'+
-    (S.loginErr?'<p style="color:var(--off);margin-top:14px">'+esc(S.loginErr)+'</p>':"")+
+    (S.loginErr?'<p style="color:var(--off);margin-top:14px">'+esc(S.loginErr)+'</p><button class="btn" type="button" data-copy="'+esc(location.href.split("#")[0].split("?")[0])+'">העתקת הקישור</button>':"")+
     '<small>אם חלון ההתחברות לא נפתח, כנראה הקישור נפתח בתוך וואטסאפ או אינסטגרם. פתחו אותו בכרום או בספארי ונסו שוב.</small></div>';
 }
 var ADMIN_EMAIL="atomickurd@gmail.com";
@@ -1149,6 +1149,7 @@ async function doLogin(){
     if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;
     if(c==="auth/unauthorized-domain")S.loginErr="הכתובת של האתר לא אושרה בהגדרות Firebase.";
     else if(c==="auth/network-request-failed")S.loginErr="אין חיבור לאינטרנט.";
+    else if(c==="auth/popup-blocked"||c==="auth/operation-not-supported-in-this-environment")S.loginErr="הדפדפן הזה לא מאפשר התחברות עם Google. מעתיקים את הקישור, פותחים אותו ישירות בספארי או בכרום, ומתחברים משם.";
     else S.loginErr="ההתחברות לא הצליחה ("+c+"). נסו לפתוח בכרום או בספארי.";
     render();
   }
